@@ -1,0 +1,682 @@
+( 1 ~ 9 )
+
+    1.  (User Story)
+    2.  (Functional Requirements Description)
+    3. UCD  (Use-case Diagram)
+    4. Activity Diagram  (develop activity diagrams from uses case)
+    5. / (Use-case Description)
+    6. CRC
+    7. 
+    8. 
+    9. 
+    10.
+
+User Story
+Acceptance Criteria
+
+[  ]
+      
+        A (US-001)   + 
+                  
+      
+        (US-002)   
+                   + 
+
+ VT4C Clear Verifiable Complete 
+ConsistentConcise Traceable 
+
+ A
+
+ID: US-001
+: 
+
+
+Acceptance Criteria:
+
+     4 
+         
+         
+
+     
+         
+
+      (Available)
+          (Picked Up) App 
+
+      [
+         ]  4 
+
+ B/
+
+ID: US-002
+
+:  Email
+
+
+
+Acceptance Criteria:
+
+     
+          Email
+         
+
+     4 
+         
+         
+
+     
+         
+
+      (Picked Up)
+         
+          Email
+
+
+1 (FR-001)
+
+
+
+
+
+
+
+
+Picked Up
+ 
+
+
+
+
+    1. 
+    2. 
+    3. 
+    4. 
+    5. 
+    6. Picked Up
+    7. 
+    8. 
+    9. 
+    10.
+
+
+
+    1. 
+    2. Available
+    3.  
+    4. 
+    5. 
+    6. 
+    7. 
+
+
+
+    1.  
+    2. 
+    3. 
+    4. 
+    5. 
+    6. 
+    7. Picked Up
+    8. 
+    9. 
+    10.
+    11.
+
+
+    1. 
+    2. 
+    3. 
+    4. 
+
+
+
+ 
+                                     
+
+  
+   
+
+  
+  
+
+2(FR-002)
+
+
+
+
+
+
+
+
+
+
+
+
+
+Picked Up
+
+
+
+
+
+    1. 
+    2. 
+    3. 
+    4. 
+    5. 
+    6. 
+    7. 
+    8. 
+    9. 
+    10.
+    11.
+
+
+
+    1. 
+    2. Available
+    3. 
+    4. 
+    5. 
+    6. 
+    7. 
+    8. 
+
+
+
+    1. 
+    2. 
+    3. 
+    4. 
+    5. 
+    6. 
+    7. 
+
+         
+    8. 
+    9. 
+    10.
+    11.Picked Up
+    12.
+    13.
+    14.
+    15.
+
+
+
+     Picked Up 
+     
+     
+     
+
+
+
+ 
+
+  
+  
+  
+
+  
+  
+Use Case Diagram
+Activity Diagram 
+ Use Case Description
+
+ Use Case Description
+
+Use Case Name:Pick Up Parcel( ID:UC-01 Importance Level:High
+
+)
+
+Primary Actor: Recipient ()  Use Case Type:Detail, Essential
+
+Stakeholders and Interests:
+ (Recipient) Wants to receive prompt arrival notifications; safely collect
+parcels in person via physical ID verification; authorize an agent online when unavailable;
+and receive a confirmation email upon pickup to ensure package security. (
+
+
+
+ )
+
+ (Agent) Wants to pick up parcels smoothly using only a physical ID per
+authorization, without complex paperwork, while ensuring personal photos are used
+strictly for auditing. (
+
+)
+
+ (Administrator) Wants to look up pending parcels quickly via 4-digit codes,
+verify visitors' IDs accurately, eliminate paperwork through photo proof, reduce manual
+errors, and maintain complete audit trails for disputes. ( 4 
+
+
+
+)
+
+Brief Description:
+
+This use case specifies the parcel pickup procedure at the management office. The
+
+generalized actor Resident specializes into Recipient (in-person pickup) or Agent (proxy
+pickup). Upon arrival, the system notifies the recipient, who can authorize an agent online
+if needed. Onsite, the Parcelman enters the 4-digit code on the desktop system to query
+details, verifies the visitor's ID according to the assigned role, captures an onsite handover
+photo, updates the parcel status to "Picked Up", logs the audit record, and dispatches a
+pickup notification email to the recipient.
+
+( (Resident)
+
+
+
+
+
+ 4 
+
+
+
+ -- 
+
+ (Picked Up)
+)
+
+Trigger: A Resident (Recipient or Agent) presents a physical ID at the management office
+and requests parcel pickup. (
+
+)
+
+Type: External
+
+Relationships:
+Association:  (Resident)  (Administrator)
+Include:  (System Authentication)  (Send Email Notification)
+Extend: N/A
+Generalization:  (Pick Up Package)
+
+Normal Flow of Events:
+    1. The Resident presents a physical ID at the management office to request parcel
+         collection. ()
+    2. The Parcelman opens the pickup web page on the desktop and enters the 4-digit
+         parcel code provided by the visitor, then clicks query. (
+
+            4 )
+
+    3. The Parcelman inputs the 4-digit parcel code on screen and initiates lookup. (
+
+            4 )
+
+    4. The system validates that the parcel code exists in the database [Exists]. (
+
+            )
+
+    5. The system verifies that the parcel status is uncollected [Available]. (
+
+            )
+
+    6. The system displays the corresponding Resident Name, Cabinet Number, and
+         Parcel Photo (if available). (
+
+            )
+
+    7. The system evaluates the Pickup Mode Flag and binds the visitor to the child actor
+         [Recipient (In Person)]. ( (Pickup Mode Flag)
+
+             ())
+
+    8. The system executes S-1: Recipient Identity and Data Verification. (
+
+            S-1:  )
+
+    9. The system executes S-3: Multimedia Sign-off and Handover Photo. (
+
+            S-3: )
+
+    10.The Parcelman clicks "Confirm Handover" on the web page. (
+
+            )
+
+    11.The system updates the parcel persistent status from Available to Picked Up. (
+
+             (Available)  (Picked Up))
+
+    12.The system displays "Parcel pickup completed" and dispatches a pickup
+         notification email to the Recipient. (
+
+             )
+
+Sub-Flows:
+S-1: 
+
+    1. The system highlights the bound Recipient information (Name) on the desktop
+         screen. (
+
+            )
+
+    2. The Parcelman inspects the physical ID presented by the Recipient. (
+
+             )
+
+    3. The Parcelman confirms that the name and photo on the ID match the displayed
+         recipient details. ()
+
+    4. The Parcelman checks "ID Verification Passed" on the interface. (
+            )
+
+S-2: 
+    1. The system displays both Recipient details and the pre-registered Agent Name. (
+
+            
+            )
+
+    2. The Parcelman inspects the physical ID presented by the Agent. (
+
+            )
+
+    3. The Parcelman confirms that the name and photo on the ID match the
+         pre-registered Agent Name. (
+
+            )
+
+    4. The Parcelman checks "ID Verification Passed" on the interface. (
+
+            )
+
+S-3: 
+    1. The system activates the desktop camera and shows a live preview. (
+
+            )
+
+    2. The Parcelman captures a handover photo of the visitor; the system caches the
+         image (Object Flow). (
+
+            Object Flow)
+
+    3. The system verifies that the photo data is Not Null and unlocks the "Confirm
+         Handover" button. (Not Null
+
+            )
+
+S-4: 
+    1. The system generates an audit record containing Parcel Code, Recipient Data,
+         Handling Parcelman, Timestamp, and Handover Photo. (
+
+            )
+
+    2. The system sets the signer field based on the bound role (e.g., records "Signed by
+         Recipient in person" if [Recipient]). (
+
+            )
+
+    3. The system binds the audit record permanently to the parcel entity. (
+
+            )
+
+Alternate / Exceptional Flows:
+3a1: 
+
+    1. If the entered code does not match any record, the system displays "No parcel
+         information found" and allows the Parcelman to re-enter the code. ( 3
+
+             4 
+             )
+
+3a2: 
+    1. In normal flow step 3, if the 4-digit code in the database shows Picked Up status,
+         the system must enforce a verification block. ( 3  4 
+
+             Picked Up )
+
+    2. The web interface must only display: Error Message: This parcel was collected on
+         [DateTime]. ( Error Message:  [] )
+
+    3. Following information hiding and privacy principles, core system controllers must
+         block data transmission, strictly prohibiting the web interface from displaying the
+         4-digit code, recipient name, agent name, or historical handover photos. (
+
+             (Information Hiding) 
+             4  )
+
+7a1:
+    1. In normal flow step 7, if the Pickup Mode Flag is set to Proxy Pickup (i.e., the
+         recipient pre-registered an agent via the notification email), the system binds the
+         visitor to the Agent child actor. ( 7 
+
+            
+            )
+
+    2. In addition to recipient info, the desktop web page highlights the pre-registered
+         Agent Name. ()
+
+    3. The system executes S-2: Agent Identity and Data Verification instead of S-1 in
+         step 8. ( S-2:  8  S-1 )
+
+    4. Afterward, the flow resumes normal step 9 (S-3: Multimedia Sign-off and Handover
+         Photo), which is inherited from the parent actor without branching. (
+
+             9S-3 -- )
+
+    5. In normal step 11 during S-4, the audit record adds the Agent Name and updates
+         the signer note from "Signed by Recipient in person" to "Signed by Agent".( 
+
+             11  S-4 
+             )
+
+    6. In normal step 13 when sending the pickup email, the notification specifies that the
+         parcel was collected by the agent and includes the agent's name. ( 13
+
+            )
+
+7a2:
+
+    1. In normal flow step 7, if an onsite visitor claims to be an agent but the flag is
+         In-Person Pickup (no agent record found), role binding to Agent fails. (
+
+            7 
+            )
+
+    2. The system hides all agent-related fields and blocks manual agent entry by the
+         Parcelman, as authorization rights belong exclusively to the recipient. (
+
+             -- 
+            )
+
+    3. The Parcelman must terminate the process and instruct the visitor to have the
+         recipient complete online authorization via the notification link first.(
+
+            )
+
+S-1, 3a2 / S-2, 3a2: 
+
+    1. In step 3 of sub-flow S-1 or S-2, if the physical ID (name or photo) does not match
+         the displayed recipient details (S-1) or agent name (S-2), the Parcelman must not
+         check "ID Verification Passed".The "Confirm Handover" button remains disabled,
+         and the Parcelman must terminate the pickup process. ( S-1  S-2  3 
+
+            S-1S-2
+            )
+
+S-3, 5a1: 
+
+    1. In step 5 of sub-flow S-3, if the system detects that no onsite photo was captured,
+         it enforces system constraints. ( S-3  5 
+
+             (Constraints))
+
+    2. The "Confirm Handover" button remains disabled and unclickable. (
+
+            )
+
+    3. The system blocks transaction submission and rejects database commits until
+         multimedia data is verified complete. (
+CRC Card
+
+CRC Card 1: Parcel                             Type:Entity, Domain ( 
+Front-Side of a CRC Card
+                                               ,  )
+ Class Name:Parcel () ID: 1
+
+Description: Represents a physical parcel delivered to the Associated Use Cases: 1
+building management office awaiting pickup. (
+
+ )
+
+Responsibilities:                              Collaborators:
+
+1. Maintain parcel pickup status (Available /  1. Resident
+    Picked Up) ()                              2. Parcelman
+                                               3. PickupRecord
+2. Verify 4-digit parcel code and perform
+    parcel query (verifyCode, queryParcel)
+    ( 4 )
+
+3. Query resident data and provide agent
+    authorization(queryResident,
+    authorizeAgent)
+    ()
+
+4. Update status to Picked Up upon
+    completion of sign-off(updateStatus)
+
+      ()
+
+5. Trigger pickup record creation and send
+    notifications (execute, sendNotification)
+
+      ()
+
+Back-Side of a CRC Card
+
+ Attributes:
+
+      1. parcelCode ()
+      2. parcelstatus ()
+      3. cabinetNumber ()
+      4. parcelPhoto ()
+
+Relationships:
+
+    1. Generalization (a-kind-of): 
+    2. Aggregation (has-parts): 
+    3. Other Associations: Resident, Parcelman, PickupRecord
+CRC Card 2: Resident
+Front-Side of a CRC Card
+
+Class Name: Resident ID: 2                                   Type:Entity, Domain (
+
+                                                             ,  )
+
+Description:Represents all residents living in the building. Associated Use Cases: 1
+
+()
+
+Responsibilities:                   Collaborators:
+
+1. Record basic resident identity   1. Parcel
+    info, personal ID number, and   2. Parcelman
+    room number (Knowing)           3. PickupRecord
+
+      ()
+
+2. Provide email address for
+    notification dispatch and data
+    query (getEmail) (Doing)
+
+      ( 
+      )
+
+Back-Side of a CRC Card
+
+ Attributes:
+
+      1. residentId ()
+      2. residentName ()
+      3. roomNumber ()
+      4. residentEmail ()
+      5. residentPersonalId ()
+
+ Relationships:
+
+      1. Generalization (a-kind-of): 
+      2. Aggregation (has-parts): 
+      3. Other Associations:Parcel, Parcelman, PickupRecord
+CRC Card 3: Parcelman      ID: 03                 Type: Concrete, Domain
+Front-Side of a CRC Card
+
+ Class Name: Parcelman ()
+
+Description: Management personnel                 Associated Use Cases: 1
+responsible for operating the building parcel
+system, querying parcel data, verifying
+recipient identity, and facilitating parcel
+handover. (
+
+)
+
+Responsibilities:                                 Collaborators:
+                                                      1. Resident
+    1. Verify recipient identity(verifyidentity)      2. Parcel
+                                                      3. PickupRecord
+            ()
+
+    2. Create parcel pickup record
+         (createPickupRecord)()
+
+    3. Assist residents in completing parcel
+         pickup ()
+
+Back-Side of a CRC Card
+
+ Attributes:
+     1. parcelmanID 
+     2. parcelmanName
+     3. parcelmanAccount
+     4. parcelmanPassword
+
+ Relationships:
+ Generalization(a-kind-of): 
+ Aggregation(has-parts):
+
+ Other Associations:Resident, Parcel , PickupRecord
+CRC Card 4: PickupRecord
+Front-Side of a CRC Card
+
+Class Name: PickupRecord () ID: 04 Type: ConcreteDomain
+
+Description: Records relevant information after  Associated Use Cases: 1
+parcel pickup completion (recipient, pickup
+timestamp, handover photo, handling
+parcelman) for auditing and query purposes. (
+
+ 
+)
+
+Responsibilities                                 Collaborators
+    1. Create pickup record ()                       1. Parcel
+    2. Record pickup timestamp ()                    2. Resident
+    3. Store handover photo ()                       3. Parcelman
+         (uploadPickupPhoto)
+    4. Record recipient information ()
+    5. Record handling parcelman information
+
+            ()
+
+    6. Provide pickup record query (
+
+            )
+
+Back-Side of a CRC Card
+
+ Attributes:
+     1. pickupRecordId ()
+     2. pickupTime ()
+     3. pickupPhoto ()
+
+Relationships:
+Generalization(a-kind-of): 
+Aggregation(has-parts):
+
+Other Associations: Parcel, Resident, Parcelman
+Class Diagram
+State Diagram
+Sequence Diagram
+

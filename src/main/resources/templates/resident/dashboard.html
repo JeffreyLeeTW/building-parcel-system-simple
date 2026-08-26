@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>我的包裹｜大樓包裹管理平台</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<section class="shell resident-shell">
+  <header th:replace="~{fragments/resident-shell :: topbar}"></header>
+  <div class="layout">
+    <main class="content">
+      <div class="head">
+        <div>
+          <h1>我的包裹</h1>
+          <p>查看待領包裹與代領設定</p>
+        </div>
+      </div>
+      <div class="notice" th:text="'您目前有 ' + ${#lists.size(parcels)} + ' 件包裹等待領取。'"></div>
+
+      <section class="card">
+        <div class="card-head"><h2>待領包裹</h2></div>
+        <div class="card-body">
+          <div class="package-list">
+            <article class="package" th:each="p : ${parcels}">
+              <div>
+                <h3>
+                  <span th:text="${p.displayCode}"></span>&nbsp;&nbsp;
+                  <span class="badge" th:classappend="${p.proxy} ? 'proxy' : 'available'"
+                        th:text="${p.proxy} ? '已授權代領' : '待領取'"></span>
+                </h3>
+                <div class="package-data">
+                  <div class="datum"><small>包裹碼</small><b class="code" th:text="${p.parcelCode}"></b></div>
+                  <div class="datum"><small>櫃位</small><b th:text="${p.cabinetLabel}"></b></div>
+                  <div class="datum"><small>到貨時間</small><b th:text="${#temporals.format(p.arrivalTime, 'yyyy/MM/dd HH:mm')}"></b></div>
+                </div>
+                <div th:if="${p.proxy}" style="margin-top:12px;color:#6f541d" th:text="'代領人：' + ${p.agentName}"></div>
+              </div>
+              <div class="actions">
+                <a class="mini" style="text-decoration:none;display:inline-flex;align-items:center"
+                   th:href="@{'/resident/parcels/' + ${p.id} + '/agent-form'}"
+                   th:text="${p.proxy} ? '修改代領人' : '設定代領人'"></a>
+              </div>
+            </article>
+            <div class="empty" th:if="${#lists.isEmpty(parcels)}">目前沒有待領包裹</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" style="margin-top:18px">
+        <div class="card-head"><h2>近期領取紀錄</h2></div>
+        <table class="history">
+          <thead><tr><th>包裹編號</th><th>實際領取人</th><th>領取方式</th><th>領取時間</th></tr></thead>
+          <tbody>
+          <tr th:each="r : ${records}">
+            <td th:text="${r.parcel.displayCode}"></td>
+            <td th:text="${r.actualPickerName}"></td>
+            <td th:text="${r.pickupMethod.name() == 'AGENT'} ? '授權代領' : '本人領取'"></td>
+            <td th:text="${#temporals.format(r.pickupTime, 'yyyy/MM/dd HH:mm')}"></td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(records)}"><td colspan="4" class="empty">尚無領取紀錄</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+</section>
+<div class="toast" id="toast" th:if="${toast}" th:text="${toast}"></div>
+
+<!-- set agent modal -->
+<div class="modal-bg" th:if="${agentParcel != null}">
+  <form class="modal" method="post" th:action="@{'/resident/parcels/' + ${agentParcel.id} + '/agent'}">
+    <h2>設定包裹代領人</h2>
+    <p th:text="${agentParcel.displayCode} + '｜' + ${agentParcel.resident.roomLabel}"></p>
+    <div class="field">
+      <label>代領人姓名</label>
+      <input name="agentName" required placeholder="請輸入真實姓名" th:value="${agentParcel.agentName}">
+    </div>
+    <label class="check">
+      <input type="checkbox" required>我授權上述人士代為領取此包裹。
+    </label>
+    <div class="modal-actions">
+      <a class="button secondary" style="line-height:40px;text-decoration:none" th:href="@{/resident/dashboard}">取消</a>
+      <button class="button" type="submit">確認授權</button>
+    </div>
+  </form>
+</div>
+
+<script th:src="@{/js/toast.js}"></script>
+</body>
+</html>

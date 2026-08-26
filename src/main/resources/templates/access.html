@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>大樓包裹管理平台</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+  <section class="access">
+    <div class="access-box">
+      <div class="access-title">大樓包裹管理平台</div>
+      <div class="access-sub">請選擇使用身分</div>
+      <div class="role-grid">
+        <a class="role-card" th:href="@{/login/resident}">
+          <div class="role-icon">住</div>
+          <b>住戶入口</b>
+          <p>查看待領包裹、設定代領人及確認通知。</p>
+          <span>進入住戶頁面 →</span>
+        </a>
+        <a class="role-card" th:href="@{/admin/login}">
+          <div class="role-icon">管</div>
+          <b>管理員入口</b>
+          <p>登記包裹、管理待領清單及處理領取。</p>
+          <span>進入管理頁面 →</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

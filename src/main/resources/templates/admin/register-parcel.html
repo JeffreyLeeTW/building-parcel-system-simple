@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>登記新包裹｜大樓包裹管理平台</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<section class="shell">
+  <header th:replace="~{fragments/admin-shell :: topbar}"></header>
+  <div class="layout">
+    <aside th:replace="~{fragments/admin-shell :: sidebar('register')}"></aside>
+    <main class="content">
+      <div class="add-page">
+        <div class="head">
+          <div>
+            <h1>登記新包裹</h1>
+            <p>建立新的待領包裹資料</p>
+          </div>
+        </div>
+        <section class="card add-card">
+          <div class="card-head"><h2>包裹資料</h2></div>
+          <form class="card-body" id="addPackageForm" method="post" th:action="@{/admin/register}">
+            <div class="form-grid">
+              <div class="field">
+                <label>房號</label>
+                <div class="room-selects">
+                  <select id="newBuilding" aria-label="棟別" required>
+                    <option value="">棟別</option>
+                    <option th:each="b : ${buildings}" th:value="${b}" th:text="${b + '棟'}"></option>
+                  </select>
+                  <select id="newFloor" aria-label="樓層" required>
+                    <option value="">樓層</option>
+                    <option th:each="f : ${floors}" th:value="${f}" th:text="${f + 'F'}"></option>
+                  </select>
+                  <select id="newUnit" aria-label="戶號" required>
+                    <option value="">戶號</option>
+                    <option th:each="u : ${units}" th:value="${u}" th:text="${u + '號'}"></option>
+                  </select>
+                </div>
+              </div>
+              <div class="field">
+                <label for="newResident">住戶姓名</label>
+                <select id="newResident" name="residentId" required disabled>
+                  <option value="">請先選擇房號</option>
+                </select>
+                <small id="residentMatchHelp" style="display:block;margin-top:7px;color:var(--muted)">請先選擇完整房號</small>
+              </div>
+              <div class="field">
+                <label>櫃位</label>
+                <div class="cabinet-selects">
+                  <select id="newCabinetArea" name="cabinetArea" aria-label="櫃位區域" required>
+                    <option value="">區域</option>
+                    <option th:each="a : ${cabinetAreas}" th:value="${a}" th:text="${a + '區'}"></option>
+                  </select>
+                  <select id="newCabinetNumber" name="cabinetNumber" aria-label="櫃號" required>
+                    <option value="">櫃號</option>
+                    <option th:each="n : ${cabinetNumbers}" th:value="${n}" th:text="${n + '號'}"></option>
+                  </select>
+                </div>
+              </div>
+              <div class="auto-code-note">
+                <b>包裹碼由系統自動產生</b>
+                <span>完成登記後將寄送給住戶</span>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="button" type="submit">完成登記並寄送通知</button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
+  </div>
+</section>
+<div class="toast" id="toast" th:if="${toast}" th:text="${toast}"></div>
+
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  var residents = /*[[${residents}]]*/ [];
+  /*]]>*/
+
+  function selectedNewRoom() {
+    var building = document.getElementById('newBuilding').value;
+    var floor = document.getElementById('newFloor').value;
+    var unit = document.getElementById('newUnit').value;
+    return (building && floor && unit) ? { buildingCode: building, floor: Number(floor), unit: Number(unit) } : null;
+  }
+
+  function updateNewResidentOptions() {
+    var select = document.getElementById('newResident');
+    var help = document.getElementById('residentMatchHelp');
+    var room = selectedNewRoom();
+    if (!room) {
+      select.innerHTML = '<option value="">請先選擇房號</option>';
+      select.disabled = true;
+      help.textContent = '請先選擇完整房號';
+      help.style.color = 'var(--muted)';
+      return;
+    }
+    var matches = residents.filter(function (r) {
+      return r.buildingCode === room.buildingCode && r.floor === room.floor && r.unit === room.unit;
+    });
+    if (matches.length === 0) {
+      select.innerHTML = '<option value="">此房號沒有住戶</option>';
+      select.disabled = true;
+      help.textContent = '此房號沒有住戶，請先至住戶資料新增';
+      help.style.color = '#a33b49';
+      return;
+    }
+    select.innerHTML = '<option value="">請選擇住戶</option>' + matches.map(function (r) {
+      return '<option value="' + r.id + '">' + r.name + '</option>';
+    }).join('');
+    select.disabled = false;
+    help.textContent = '僅顯示此房號的住戶';
+    help.style.color = 'var(--muted)';
+  }
+
+  ['newBuilding', 'newFloor', 'newUnit'].forEach(function (id) {
+    document.getElementById(id).addEventListener('change', updateNewResidentOptions);
+  });
+</script>
+<script th:src="@{/js/toast.js}"></script>
+</body>
+</html>

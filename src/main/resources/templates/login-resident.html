@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>住戶登入｜大樓包裹管理平台</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+  <section class="admin-login">
+    <form class="admin-login-box" method="post" th:action="@{/login/resident}">
+      <h1 class="admin-login-title">住戶登入</h1>
+      <p class="admin-login-note">大樓包裹管理平台</p>
+      <div class="field"><label for="email">Email</label><input id="email" name="email" type="email" autocomplete="username" required></div>
+      <div class="field"><label for="password">密碼</label><input id="password" name="password" type="password" autocomplete="current-password" required></div>
+      <div class="login-error" th:if="${error}" th:text="${error}">帳號或密碼錯誤</div>
+      <button class="button" type="submit">登入</button>
+    </form>
+  </section>
+</body>
+</html>

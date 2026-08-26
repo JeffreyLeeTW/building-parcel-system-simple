@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>包裹領取｜大樓包裹管理平台</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<section class="shell">
+  <header th:replace="~{fragments/admin-shell :: topbar}"></header>
+  <div class="layout">
+    <aside th:replace="~{fragments/admin-shell :: sidebar('pickup')}"></aside>
+    <main class="content">
+      <div class="pickup-page">
+        <div class="head">
+          <div>
+            <h1>包裹領取</h1>
+            <p>依序完成搜尋、身分查驗與照片存證</p>
+          </div>
+        </div>
+
+        <div class="stepper">
+          <div class="step" th:classappend="${step == 1} ? 'active' : (${step} &gt; 1 ? 'done' : '')">
+            <span class="step-num" th:text="${step} &gt; 1 ? '✓' : '1'"></span>搜尋包裹
+          </div>
+          <i class="step-line"></i>
+          <div class="step" th:classappend="${step == 2} ? 'active' : (${step} &gt; 2 ? 'done' : '')">
+            <span class="step-num" th:text="${step} &gt; 2 ? '✓' : '2'"></span>身分查驗
+          </div>
+          <i class="step-line"></i>
+          <div class="step" th:classappend="${step == 3} ? 'active' : (${step} &gt; 3 ? 'done' : '')">
+            <span class="step-num" th:text="${step} &gt; 3 ? '✓' : '3'"></span>照片存證
+          </div>
+          <i class="step-line"></i>
+          <div class="step" th:classappend="${step == 4} ? 'active' : ''"><span class="step-num">4</span>完成</div>
+        </div>
+
+        <!-- STEP 1: search -->
+        <section class="card simple-search" th:if="${step == 1}">
+          <div class="card-head"><h2>輸入包裹碼</h2></div>
+          <div class="card-body">
+            <form class="search-box" method="post" th:action="@{/admin/pickup/search}">
+              <label for="pickupCode">4 位數包裹碼</label>
+              <div class="code-row">
+                <input class="code-input" id="pickupCode" name="code" maxlength="4" pattern="[0-9]{4}"
+                       inputmode="numeric" placeholder="0000" autocomplete="off"
+                       th:value="${submittedCode}" required>
+                <button class="primary" type="submit">搜尋</button>
+              </div>
+              <div class="test-codes">
+                <button type="button" class="test-code" onclick="document.getElementById('pickupCode').value='4826'"><b>4826</b>本人領取測試</button>
+                <button type="button" class="test-code" onclick="document.getElementById('pickupCode').value='3504'"><b>3504</b>授權代領測試</button>
+              </div>
+            </form>
+            <div class="error-box" style="margin-top:16px" th:if="${error}">
+              <h2 th:text="${error}"></h2>
+            </div>
+          </div>
+        </section>
+
+        <!-- STEP 2: identity verification -->
+        <div th:if="${step == 2 and parcel != null}">
+          <div class="pickup-type-banner">
+            <span>領取方式</span>
+            <b th:text="${parcel.proxy} ? '授權代領' : '本人領取'"></b>
+          </div>
+          <section class="card">
+            <div class="card-head"><h2 th:text="(${parcel.proxy} ? '代領人' : '住戶') + '身分查驗'"></h2></div>
+            <div class="card-body">
+              <div class="grid">
+                <div>
+                  <form id="verifyForm" method="post" th:action="@{/admin/pickup/verify}">
+                    <div class="verify-list">
+                      <div class="verify-item">
+                        <small th:text="${parcel.proxy} ? '原住戶' : '住戶'"></small>
+                        <b th:text="${parcel.resident.name}"></b>
+                      </div>
+                      <div class="verify-item" th:if="${!parcel.proxy and parcel.resident.personalId != null and !parcel.resident.personalId.isBlank()}">
+                        <small>身分證字號</small>
+                        <b th:text="${parcel.resident.personalId}"></b>
+                      </div>
+                      <div class="verify-item">
+                        <small>房號</small>
+                        <b th:text="${parcel.resident.roomLabel}"></b>
+                      </div>
+                      <div class="verify-item" th:if="${parcel.proxy}">
+                        <small>授權代領人</small>
+                        <b th:text="${parcel.agentName}"></b>
+                      </div>
+                      <div class="verify-item">
+                        <small>包裹編號</small>
+                        <b th:text="${parcel.displayCode}"></b>
+                      </div>
+                      <div class="verify-item">
+                        <small>櫃位</small>
+                        <b th:text="${parcel.cabinetLabel}"></b>
+                      </div>
+                    </div>
+                    <div class="verify-help" th:text="'請核對' + (${parcel.proxy} ? '代領人' : '住戶') + '的實體身分證件。'"></div>
+                    <label class="checkline">
+                      <input type="checkbox" name="verified" required>身分證件已核對
+                    </label>
+                  </form>
+                </div>
+                <div>
+                  <div class="package-card">
+                    <div class="package-top"><b>包裹資料</b><span class="badge available">待領取</span></div>
+                    <div class="package-details">
+                      <div class="parcel-photo">
+                        <div class="box-art" th:attr="data-code=('PKG ' + ${parcel.parcelCode})"></div>
+                      </div>
+                      <div class="datum"><small>包裹編號</small><b th:text="${parcel.displayCode}"></b></div>
+                      <div class="datum"><small>櫃位</small><b th:text="${parcel.cabinetLabel}"></b></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="action-row">
+                <a class="secondary" th:href="@{/admin/pickup/back-to-search}">返回搜尋</a>
+                <button class="primary" type="submit" form="verifyForm">前往照片存證</button>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <!-- STEP 3: photo evidence -->
+        <section class="card" th:if="${step == 3 and parcel != null}">
+          <div class="card-head"><h2>領取照片存證</h2></div>
+          <div class="card-body">
+            <div class="camera" id="cameraBox">
+              <div class="camera-placeholder" id="cameraPlaceholder"><div class="camera-icon">📷</div><b>相機預覽</b></div>
+              <video id="cameraVideo" autoplay playsinline muted style="display:none"></video>
+              <img id="capturedPhoto" class="evidence-photo" style="display:none" alt="包裹交付照片">
+            </div>
+            <canvas id="captureCanvas" style="display:none"></canvas>
+            <div class="status-panel">
+              <div><b id="photoStatusText">尚未拍攝</b></div>
+              <div id="photoActionArea"></div>
+            </div>
+            <div class="action-row">
+              <a class="secondary" th:href="@{/admin/pickup/back-to-verify}">返回身分查驗</a>
+              <button class="primary" type="button" id="confirmBtn" disabled>確認交付</button>
+            </div>
+
+            <form id="photoForm" method="post" th:action="@{/admin/pickup/confirm}">
+              <input type="hidden" name="photoData" id="photoData">
+            </form>
+
+            <div class="modal-bg" id="confirmModal" style="display:none">
+              <div class="modal">
+                <h2>確認交付包裹？</h2>
+                <div class="modal-data">
+                  <div><span>包裹編號</span><b th:text="${parcel.displayCode}"></b></div>
+                  <div><span>領取方式</span><b th:text="${parcel.proxy} ? '授權代領' : '本人領取'"></b></div>
+                  <div><span>領取人</span><b th:text="${parcel.proxy} ? ${parcel.agentName} : ${parcel.resident.name}"></b></div>
+                  <div><span>櫃位</span><b th:text="${parcel.cabinetLabel}"></b></div>
+                </div>
+                <div class="modal-actions">
+                  <button type="button" class="button secondary" id="cancelConfirm">取消</button>
+                  <button type="submit" form="photoForm" class="button">確認交付</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- STEP 4: done -->
+        <section class="card success-wrap" th:if="${step == 4 and record != null}">
+          <div class="success-icon">✓</div>
+          <h1>包裹領取完成</h1>
+          <div class="summary">
+            <div class="summary-row">
+              <div class="datum"><small>包裹編號</small><b th:text="${record.parcel.displayCode}"></b></div>
+              <div class="datum"><small>領取方式</small><b th:text="${record.pickupMethod.name() == 'AGENT'} ? '授權代領' : '本人領取'"></b></div>
+              <div class="datum"><small>實際領取人</small><b th:text="${record.actualPickerName}"></b></div>
+            </div>
+            <div class="summary-row">
+              <div class="datum"><small>櫃位</small><b th:text="${record.parcel.cabinetLabel}"></b></div>
+              <div class="datum"><small>管理員</small><b th:text="${record.handlingParcelman.name}"></b></div>
+              <div class="datum"><small>包裹狀態</small><span class="badge picked">已領取</span></div>
+            </div>
+          </div>
+          <div class="mail-note">領取確認信已寄送給住戶</div>
+          <a class="primary" style="display:inline-block;line-height:43px;text-decoration:none" th:href="@{/admin/pickup/next}">處理下一件包裹</a>
+        </section>
+
+      </div>
+    </main>
+  </div>
+</section>
+<script th:src="@{/js/camera.js}"></script>
+</body>
+</html>

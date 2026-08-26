@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>設定代領人｜大樓包裹管理平台</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+  <section class="access">
+    <div class="access-box" style="width:520px">
+
+      <div th:if="${error}">
+        <div class="access-title">無法設定代領人</div>
+        <div class="error-box" style="margin-top:20px">
+          <h2 th:text="${error}"></h2>
+        </div>
+      </div>
+
+      <div th:if="${done}">
+        <div class="success-icon" style="margin:0 auto 16px">✓</div>
+        <div class="access-title" style="text-align:center">代領授權已完成</div>
+        <p class="access-sub" style="text-align:center" th:text="${parcel.displayCode} + '　代領人：' + ${parcel.agentName}">
+        </p>
+        <p style="color:var(--muted);text-align:center;margin-top:10px">請提醒代領人攜帶本人實體身分證件，至管理室領取包裹。</p>
+      </div>
+
+      <form th:if="${parcel != null and done == null}" method="post" th:action="@{/agent-authorize}">
+        <div class="access-title">設定包裹代領人</div>
+        <p class="access-sub" th:text="${parcel.resident.name} + '｜' + ${parcel.resident.roomLabel} + '　包裹碼：' + ${parcel.parcelCode}"></p>
+        <input type="hidden" name="token" th:value="${token}">
+        <div class="field" style="margin-top:24px">
+          <label>代領人姓名</label>
+          <input name="agentName" required placeholder="請輸入真實姓名" th:value="${parcel.agentName}">
+        </div>
+        <label class="check">
+          <input type="checkbox" required>我授權上述人士代為領取此包裹。
+        </label>
+        <button class="button" type="submit" style="width:100%">確認授權</button>
+      </form>
+
+    </div>
+  </section>
+</body>
+</html>

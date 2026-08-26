@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>管理住戶資料｜大樓包裹管理平台</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<section class="shell">
+  <header th:replace="~{fragments/admin-shell :: topbar}"></header>
+  <div class="layout">
+    <aside th:replace="~{fragments/admin-shell :: sidebar('residents')}"></aside>
+    <main class="content">
+      <div class="head">
+        <div><h1>管理住戶資料</h1></div>
+        <a class="button" style="line-height:40px;text-decoration:none;display:inline-block" th:href="@{/admin/residents/new}">新增住戶</a>
+      </div>
+      <section class="card">
+        <table class="history">
+          <thead>
+          <tr><th>住戶姓名</th><th>房號／樓層</th><th>Email</th><th>密碼</th><th>操作</th></tr>
+          </thead>
+          <tbody>
+          <tr th:each="r : ${residents}">
+            <td><b th:text="${r.name}"></b></td>
+            <td th:text="${r.roomLabel}"></td>
+            <td th:text="${r.email}"></td>
+            <td>••••••••</td>
+            <td>
+              <div class="resident-actions">
+                <a class="mini" style="text-decoration:none;display:inline-flex;align-items:center" th:href="@{'/admin/residents/' + ${r.id} + '/edit'}">修改</a>
+                <a class="mini danger" style="text-decoration:none;display:inline-flex;align-items:center" th:href="@{'/admin/residents/' + ${r.id} + '/delete-confirm'}">刪除</a>
+              </div>
+            </td>
+          </tr>
+          <tr th:if="${#lists.isEmpty(residents)}"><td colspan="5" class="empty">尚無住戶資料</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+  </div>
+</section>
+<div class="toast" id="toast" th:if="${toast}" th:text="${toast}"></div>
+
+<!-- add / edit modal -->
+<div class="modal-bg" th:if="${showForm}">
+  <form class="modal" method="post"
+        th:action="${editing} ? @{'/admin/residents/' + ${editResident.id}} : @{/admin/residents}">
+    <h2 th:text="${editing} ? '修改住戶' : '新增住戶'"></h2>
+    <div class="field">
+      <label>住戶姓名</label>
+      <input name="name" required th:value="${editing} ? ${editResident.name} : ''">
+    </div>
+    <div class="resident-modal-room">
+      <label>房號／樓層</label>
+      <div class="room-selects">
+        <select name="buildingCode" required aria-label="棟別">
+          <option value="">棟別</option>
+          <option th:each="b : ${buildings}" th:value="${b}" th:text="${b + '棟'}"
+                  th:selected="${editing} and ${editResident.buildingCode} == ${b}"></option>
+        </select>
+        <select name="floor" required aria-label="樓層">
+          <option value="">樓層</option>
+          <option th:each="f : ${floors}" th:value="${f}" th:text="${f + 'F'}"
+                  th:selected="${editing} and ${editResident.floor} == ${f}"></option>
+        </select>
+        <select name="unit" required aria-label="戶號">
+          <option value="">戶號</option>
+          <option th:each="u : ${units}" th:value="${u}" th:text="${u + '號'}"
+                  th:selected="${editing} and ${editResident.unit} == ${u}"></option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label>Email</label>
+      <input name="email" type="email" required th:value="${editing} ? ${editResident.email} : ''">
+    </div>
+    <div class="field">
+      <label>身分證字號（供領取現場人工核對，可留空）</label>
+      <input name="personalId" th:value="${editing} ? ${editResident.personalId} : ''">
+    </div>
+    <div class="field">
+      <label th:text="${editing} ? '新密碼（不修改可留空）' : '密碼'"></label>
+      <input name="password" type="password" th:required="${!editing}">
+    </div>
+    <div class="modal-actions">
+      <a class="button secondary" style="line-height:40px;text-decoration:none" th:href="@{/admin/residents}">取消</a>
+      <button class="button" type="submit" th:text="${editing} ? '儲存修改' : '新增住戶'"></button>
+    </div>
+  </form>
+</div>
+
+<!-- delete confirm modal -->
+<div class="modal-bg" th:if="${deleteResident != null}">
+  <div class="modal">
+    <h2>刪除住戶？</h2>
+    <p th:text="'確定要刪除「' + ${deleteResident.name} + '／' + ${deleteResident.roomLabel} + '」的住戶資料嗎？'"></p>
+    <div class="modal-actions">
+      <a class="button secondary" style="line-height:40px;text-decoration:none" th:href="@{/admin/residents}">取消</a>
+      <form method="post" th:action="@{'/admin/residents/' + ${deleteResident.id} + '/delete'}">
+        <button class="button danger" type="submit">確認刪除</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script th:src="@{/js/toast.js}"></script>
+</body>
+</html>

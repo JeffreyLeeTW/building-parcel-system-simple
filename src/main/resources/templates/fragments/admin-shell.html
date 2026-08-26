@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<header th:fragment="topbar" class="topbar">
+  <div class="brand">大樓包裹管理平台｜管理員</div>
+  <div class="top-right">
+    <div class="user">
+      <b th:text="${currentParcelman != null ? currentParcelman.name : ''}">管理員</b>
+      <small>管理員</small>
+    </div>
+    <form method="post" th:action="@{/admin/logout}">
+      <button class="outline" type="submit">登出</button>
+    </form>
+  </div>
+</header>
+
+<aside th:fragment="sidebar(active)" class="side">
+  <div class="side-label">包裹作業</div>
+  <a th:classappend="${active == 'pickup'} ? 'active'" th:href="@{/admin/pickup}"><span class="menu-icon">▱</span>包裹領取</a>
+  <a th:classappend="${active == 'register'} ? 'active'" th:href="@{/admin/register}"><span class="menu-icon">＋</span>登記新包裹</a>
+  <div class="side-label side-group">管理住戶資料</div>
+  <a th:classappend="${active == 'residents'} ? 'active'" th:href="@{/admin/residents}"><span class="menu-icon">⌂</span>住戶資料</a>
+</aside>
+
+</body>
+</html>
