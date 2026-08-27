@@ -26,13 +26,13 @@ public class ParcelService {
         Parcel parcel = new Parcel();
         parcel.setResident(resident);
         parcel.setParcelCode(generateUniqueCode());
-        parcel.setStatus(ParcelStatus.AVAILABLE);
+        parcel.setParcelstatus(ParcelStatus.AVAILABLE);
         parcel.setCabinetArea(cabinetArea);
         parcel.setCabinetNumber(cabinetNumber);
         parcel.setArrivalTime(LocalDateTime.now());
         parcel.setAgentToken(UUID.randomUUID().toString().replace("-", ""));
         parcel = parcelRepository.save(parcel);
-        mailService.sendArrivalNotification(resident, parcel);
+        mailService.sendNotification(resident, parcel);
         return parcel;
     }
 
@@ -40,7 +40,7 @@ public class ParcelService {
         String code;
         do {
             code = String.format("%04d", random.nextInt(10000));
-        } while (parcelRepository.existsByParcelCodeAndStatus(code, ParcelStatus.AVAILABLE));
+        } while (parcelRepository.existsByParcelCodeAndParcelstatus(code, ParcelStatus.AVAILABLE));
         return code;
     }
 }

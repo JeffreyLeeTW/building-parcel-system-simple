@@ -19,12 +19,12 @@ public class ResidentService {
     public Resident create(String name, String buildingCode, int floor, int unit, String email,
                             String personalId, String rawPassword) {
         Resident resident = new Resident();
-        resident.setName(name);
+        resident.setResidentName(name);
         resident.setBuildingCode(buildingCode);
         resident.setFloor(floor);
         resident.setUnit(unit);
-        resident.setEmail(email);
-        resident.setPersonalId(personalId);
+        resident.setResidentEmail(email);
+        resident.setResidentPersonalId(personalId);
         resident.setPasswordHash(passwordEncoder.encode(rawPassword));
         return residentRepository.save(resident);
     }
@@ -32,12 +32,12 @@ public class ResidentService {
     public Resident update(Long id, String name, String buildingCode, int floor, int unit, String email,
                             String personalId, String rawPassword) {
         Resident resident = residentRepository.findById(id).orElseThrow();
-        resident.setName(name);
+        resident.setResidentName(name);
         resident.setBuildingCode(buildingCode);
         resident.setFloor(floor);
         resident.setUnit(unit);
-        resident.setEmail(email);
-        resident.setPersonalId(personalId);
+        resident.setResidentEmail(email);
+        resident.setResidentPersonalId(personalId);
         if (rawPassword != null && !rawPassword.isBlank()) {
             resident.setPasswordHash(passwordEncoder.encode(rawPassword));
         }
