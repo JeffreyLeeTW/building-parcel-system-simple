@@ -18,7 +18,7 @@ public class AuthInterceptor implements HandlerInterceptor {
                 return false;
             }
         } else if (uri.startsWith("/admin") && !uri.equals("/admin/login")) {
-            if (session == null || session.getAttribute(SessionKeys.PARCELMAN_ID) == null) {
+            if (session == null || session.getAttribute(SessionKeys.CONCIERGE_ID) == null) {
                 response.sendRedirect(request.getContextPath() + "/admin/login");
                 return false;
             }

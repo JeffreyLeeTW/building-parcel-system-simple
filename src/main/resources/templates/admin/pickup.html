@@ -82,7 +82,7 @@
                       </div>
                       <div class="verify-item" th:if="${parcel.proxy}">
                         <small>授權代領人</small>
-                        <b th:text="${parcel.agentName}"></b>
+                        <b th:text="${parcel.recipientRepresentativeName}"></b>
                       </div>
                       <div class="verify-item">
                         <small>包裹編號</small>
@@ -149,7 +149,7 @@
                 <div class="modal-data">
                   <div><span>包裹編號</span><b th:text="${parcel.displayCode}"></b></div>
                   <div><span>領取方式</span><b th:text="${parcel.proxy} ? '授權代領' : '本人領取'"></b></div>
-                  <div><span>領取人</span><b th:text="${parcel.proxy} ? ${parcel.agentName} : ${parcel.resident.residentName}"></b></div>
+                  <div><span>領取人</span><b th:text="${parcel.proxy} ? ${parcel.recipientRepresentativeName} : ${parcel.resident.residentName}"></b></div>
                   <div><span>櫃位</span><b th:text="${parcel.cabinetLabel}"></b></div>
                 </div>
                 <div class="modal-actions">
@@ -168,12 +168,12 @@
           <div class="summary">
             <div class="summary-row">
               <div class="datum"><small>包裹編號</small><b th:text="${record.parcel.displayCode}"></b></div>
-              <div class="datum"><small>領取方式</small><b th:text="${record.pickupMethod.name() == 'AGENT'} ? '授權代領' : '本人領取'"></b></div>
+              <div class="datum"><small>領取方式</small><b th:text="${record.pickupMethod.name() == 'RECIPIENT_REPRESENTATIVE'} ? '授權代領' : '本人領取'"></b></div>
               <div class="datum"><small>實際領取人</small><b th:text="${record.actualPickerName}"></b></div>
             </div>
             <div class="summary-row">
               <div class="datum"><small>櫃位</small><b th:text="${record.parcel.cabinetLabel}"></b></div>
-              <div class="datum"><small>管理員</small><b th:text="${record.handlingParcelman.parcelmanName}"></b></div>
+              <div class="datum"><small>管理員</small><b th:text="${record.handlingConcierge.conciergeName}"></b></div>
               <div class="datum"><small>包裹狀態</small><span class="badge picked">已領取</span></div>
             </div>
           </div>

@@ -233,14 +233,14 @@ Primary Actor: Recipient ()  Use Case Type:Detail, Essential
 
 Stakeholders and Interests:
  (Recipient) Wants to receive prompt arrival notifications; safely collect
-parcels in person via physical ID verification; authorize an agent online when unavailable;
+parcels in person via physical ID verification; authorize a recipient's representative online when unavailable;
 and receive a confirmation email upon pickup to ensure package security. (
 
 
 
  )
 
- (Agent) Wants to pick up parcels smoothly using only a physical ID per
+ (Recipient's Representative) Wants to pick up parcels smoothly using only a physical ID per
 authorization, without complex paperwork, while ensuring personal photos are used
 strictly for auditing. (
 
@@ -258,9 +258,9 @@ Brief Description:
 
 This use case specifies the parcel pickup procedure at the management office. The
 
-generalized actor Resident specializes into Recipient (in-person pickup) or Agent (proxy
-pickup). Upon arrival, the system notifies the recipient, who can authorize an agent online
-if needed. Onsite, the Parcelman enters the 4-digit code on the desktop system to query
+generalized actor Resident specializes into Recipient (in-person pickup) or Recipient's Representative (proxy
+pickup). Upon arrival, the system notifies the recipient, who can authorize a recipient's representative online
+if needed. Onsite, the Concierge enters the 4-digit code on the desktop system to query
 details, verifies the visitor's ID according to the assigned role, captures an onsite handover
 photo, updates the parcel status to "Picked Up", logs the audit record, and dispatches a
 pickup notification email to the recipient.
@@ -280,7 +280,7 @@ pickup notification email to the recipient.
  (Picked Up)
 )
 
-Trigger: A Resident (Recipient or Agent) presents a physical ID at the management office
+Trigger: A Resident (Recipient or Recipient's Representative) presents a physical ID at the management office
 and requests parcel pickup. (
 
 )
@@ -296,12 +296,12 @@ Generalization:  (Pick Up Package)
 Normal Flow of Events:
     1. The Resident presents a physical ID at the management office to request parcel
          collection. ()
-    2. The Parcelman opens the pickup web page on the desktop and enters the 4-digit
+    2. The Concierge opens the pickup web page on the desktop and enters the 4-digit
          parcel code provided by the visitor, then clicks query. (
 
             4 )
 
-    3. The Parcelman inputs the 4-digit parcel code on screen and initiates lookup. (
+    3. The Concierge inputs the 4-digit parcel code on screen and initiates lookup. (
 
             4 )
 
@@ -331,7 +331,7 @@ Normal Flow of Events:
 
             S-3: )
 
-    10.The Parcelman clicks "Confirm Handover" on the web page. (
+    10.The Concierge clicks "Confirm Handover" on the web page. (
 
             )
 
@@ -352,32 +352,32 @@ S-1:
 
             )
 
-    2. The Parcelman inspects the physical ID presented by the Recipient. (
+    2. The Concierge inspects the physical ID presented by the Recipient. (
 
              )
 
-    3. The Parcelman confirms that the name and photo on the ID match the displayed
+    3. The Concierge confirms that the name and photo on the ID match the displayed
          recipient details. ()
 
-    4. The Parcelman checks "ID Verification Passed" on the interface. (
+    4. The Concierge checks "ID Verification Passed" on the interface. (
             )
 
 S-2: 
-    1. The system displays both Recipient details and the pre-registered Agent Name. (
+    1. The system displays both Recipient details and the pre-registered Recipient's Representative Name. (
 
             
             )
 
-    2. The Parcelman inspects the physical ID presented by the Agent. (
+    2. The Concierge inspects the physical ID presented by the Recipient's Representative. (
 
             )
 
-    3. The Parcelman confirms that the name and photo on the ID match the
-         pre-registered Agent Name. (
+    3. The Concierge confirms that the name and photo on the ID match the
+         pre-registered Recipient's Representative Name. (
 
             )
 
-    4. The Parcelman checks "ID Verification Passed" on the interface. (
+    4. The Concierge checks "ID Verification Passed" on the interface. (
 
             )
 
@@ -386,7 +386,7 @@ S-3:
 
             )
 
-    2. The Parcelman captures a handover photo of the visitor; the system caches the
+    2. The Concierge captures a handover photo of the visitor; the system caches the
          image (Object Flow). (
 
             Object Flow)
@@ -398,7 +398,7 @@ S-3:
 
 S-4: 
     1. The system generates an audit record containing Parcel Code, Recipient Data,
-         Handling Parcelman, Timestamp, and Handover Photo. (
+         Handling Concierge, Timestamp, and Handover Photo. (
 
             )
 
@@ -415,7 +415,7 @@ Alternate / Exceptional Flows:
 3a1: 
 
     1. If the entered code does not match any record, the system displays "No parcel
-         information found" and allows the Parcelman to re-enter the code. ( 3
+         information found" and allows the Concierge to re-enter the code. ( 3
 
              4 
              )
@@ -431,23 +431,23 @@ Alternate / Exceptional Flows:
 
     3. Following information hiding and privacy principles, core system controllers must
          block data transmission, strictly prohibiting the web interface from displaying the
-         4-digit code, recipient name, agent name, or historical handover photos. (
+         4-digit code, recipient name, recipient's representative name, or historical handover photos. (
 
              (Information Hiding) 
              4  )
 
 7a1:
     1. In normal flow step 7, if the Pickup Mode Flag is set to Proxy Pickup (i.e., the
-         recipient pre-registered an agent via the notification email), the system binds the
-         visitor to the Agent child actor. ( 7 
+         recipient pre-registered a recipient's representative via the notification email), the system binds the
+         visitor to the Recipient's Representative child actor. ( 7 
 
             
             )
 
     2. In addition to recipient info, the desktop web page highlights the pre-registered
-         Agent Name. ()
+         Recipient's Representative Name. ()
 
-    3. The system executes S-2: Agent Identity and Data Verification instead of S-1 in
+    3. The system executes S-2: Recipient's Representative Identity and Data Verification instead of S-1 in
          step 8. ( S-2:  8  S-1 )
 
     4. Afterward, the flow resumes normal step 9 (S-3: Multimedia Sign-off and Handover
@@ -455,32 +455,32 @@ Alternate / Exceptional Flows:
 
              9S-3 -- )
 
-    5. In normal step 11 during S-4, the audit record adds the Agent Name and updates
-         the signer note from "Signed by Recipient in person" to "Signed by Agent".( 
+    5. In normal step 11 during S-4, the audit record adds the Recipient's Representative Name and updates
+         the signer note from "Signed by Recipient in person" to "Signed by Recipient's Representative".( 
 
              11  S-4 
              )
 
     6. In normal step 13 when sending the pickup email, the notification specifies that the
-         parcel was collected by the agent and includes the agent's name. ( 13
+         parcel was collected by the recipient's representative and includes the recipient's representative's name. ( 13
 
             )
 
 7a2:
 
-    1. In normal flow step 7, if an onsite visitor claims to be an agent but the flag is
-         In-Person Pickup (no agent record found), role binding to Agent fails. (
+    1. In normal flow step 7, if an onsite visitor claims to be a recipient's representative but the flag is
+         In-Person Pickup (no recipient's representative record found), role binding to Recipient's Representative fails. (
 
             7 
             )
 
-    2. The system hides all agent-related fields and blocks manual agent entry by the
-         Parcelman, as authorization rights belong exclusively to the recipient. (
+    2. The system hides all recipient's representative-related fields and blocks manual recipient's representative entry by the
+         Concierge, as authorization rights belong exclusively to the recipient. (
 
              -- 
             )
 
-    3. The Parcelman must terminate the process and instruct the visitor to have the
+    3. The Concierge must terminate the process and instruct the visitor to have the
          recipient complete online authorization via the notification link first.(
 
             )
@@ -488,9 +488,9 @@ Alternate / Exceptional Flows:
 S-1, 3a2 / S-2, 3a2: 
 
     1. In step 3 of sub-flow S-1 or S-2, if the physical ID (name or photo) does not match
-         the displayed recipient details (S-1) or agent name (S-2), the Parcelman must not
+         the displayed recipient details (S-1) or recipient's representative name (S-2), the Concierge must not
          check "ID Verification Passed".The "Confirm Handover" button remains disabled,
-         and the Parcelman must terminate the pickup process. ( S-1  S-2  3 
+         and the Concierge must terminate the pickup process. ( S-1  S-2  3 
 
             S-1S-2
             )
@@ -523,15 +523,15 @@ building management office awaiting pickup. (
 Responsibilities:                              Collaborators:
 
 1. Maintain parcel pickup status (Available /  1. Resident
-    Picked Up) ()                              2. Parcelman
+    Picked Up) ()                              2. Concierge
                                                3. PickupRecord
 2. Verify 4-digit parcel code and perform
     parcel query (verifyCode, queryParcel)
     ( 4 )
 
-3. Query resident data and provide agent
+3. Query resident data and provide recipient's representative
     authorization(queryResident,
-    authorizeAgent)
+    authorizeRecipientRepresentative)
     ()
 
 4. Update status to Picked Up upon
@@ -557,7 +557,7 @@ Relationships:
 
     1. Generalization (a-kind-of): 
     2. Aggregation (has-parts): 
-    3. Other Associations: Resident, Parcelman, PickupRecord
+    3. Other Associations: Resident, Concierge, PickupRecord
 CRC Card 2: Resident
 Front-Side of a CRC Card
 
@@ -572,7 +572,7 @@ Description:Represents all residents living in the building. Associated Use Case
 Responsibilities:                   Collaborators:
 
 1. Record basic resident identity   1. Parcel
-    info, personal ID number, and   2. Parcelman
+    info, personal ID number, and   2. Concierge
     room number (Knowing)           3. PickupRecord
 
       ()
@@ -598,11 +598,11 @@ Back-Side of a CRC Card
 
       1. Generalization (a-kind-of): 
       2. Aggregation (has-parts): 
-      3. Other Associations:Parcel, Parcelman, PickupRecord
-CRC Card 3: Parcelman      ID: 03                 Type: Concrete, Domain
+      3. Other Associations:Parcel, Concierge, PickupRecord
+CRC Card 3: Concierge      ID: 03                 Type: Concrete, Domain
 Front-Side of a CRC Card
 
- Class Name: Parcelman ()
+ Class Name: Concierge ()
 
 Description: Management personnel                 Associated Use Cases: 1
 responsible for operating the building parcel
@@ -627,10 +627,10 @@ Responsibilities:                                 Collaborators:
 Back-Side of a CRC Card
 
  Attributes:
-     1. parcelmanID 
-     2. parcelmanName
-     3. parcelmanAccount
-     4. parcelmanPassword
+     1. conciergeID 
+     2. conciergeName
+     3. conciergeAccount
+     4. conciergePassword
 
  Relationships:
  Generalization(a-kind-of): 
@@ -645,7 +645,7 @@ Class Name: PickupRecord () ID: 04 Type: ConcreteDomain
 Description: Records relevant information after  Associated Use Cases: 1
 parcel pickup completion (recipient, pickup
 timestamp, handover photo, handling
-parcelman) for auditing and query purposes. (
+concierge) for auditing and query purposes. (
 
  
 )
@@ -653,10 +653,10 @@ parcelman) for auditing and query purposes. (
 Responsibilities                                 Collaborators
     1. Create pickup record ()                       1. Parcel
     2. Record pickup timestamp ()                    2. Resident
-    3. Store handover photo ()                       3. Parcelman
+    3. Store handover photo ()                       3. Concierge
          (uploadPickupPhoto)
     4. Record recipient information ()
-    5. Record handling parcelman information
+    5. Record handling concierge information
 
             ()
 
@@ -675,7 +675,7 @@ Relationships:
 Generalization(a-kind-of): 
 Aggregation(has-parts):
 
-Other Associations: Parcel, Resident, Parcelman
+Other Associations: Parcel, Resident, Concierge
 Class Diagram
 State Diagram
 Sequence Diagram

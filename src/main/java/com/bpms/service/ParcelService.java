@@ -30,7 +30,7 @@ public class ParcelService {
         parcel.setCabinetArea(cabinetArea);
         parcel.setCabinetNumber(cabinetNumber);
         parcel.setArrivalTime(LocalDateTime.now());
-        parcel.setAgentToken(UUID.randomUUID().toString().replace("-", ""));
+        parcel.setRecipientRepresentativeToken(UUID.randomUUID().toString().replace("-", ""));
         parcel = parcelRepository.save(parcel);
         mailService.sendNotification(resident, parcel);
         return parcel;

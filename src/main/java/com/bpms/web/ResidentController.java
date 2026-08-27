@@ -40,8 +40,8 @@ public class ResidentController {
         return "resident/dashboard";
     }
 
-    @GetMapping("/resident/parcels/{id}/agent-form")
-    public String agentForm(@PathVariable Long id, HttpServletRequest request, Model model) {
+    @GetMapping("/resident/parcels/{id}/recipient-representative-form")
+    public String recipientRepresentativeForm(@PathVariable Long id, HttpServletRequest request, Model model) {
         Resident resident = currentResident(request);
         var mine = parcelRepository.findByResidentAndParcelstatusOrderByArrivalTimeDesc(resident, ParcelStatus.AVAILABLE);
         var records = pickupRecordRepository.findByParcel_ResidentOrderByPickupTimeDesc(resident);
@@ -52,12 +52,12 @@ public class ResidentController {
         if (parcel == null || !parcel.getResident().getResidentId().equals(resident.getResidentId())) {
             return "redirect:/resident/dashboard";
         }
-        model.addAttribute("agentParcel", parcel);
+        model.addAttribute("recipientRepresentativeParcel", parcel);
         return "resident/dashboard";
     }
 
-    @PostMapping("/resident/parcels/{id}/agent")
-    public String setAgent(@PathVariable Long id, @RequestParam String agentName,
+    @PostMapping("/resident/parcels/{id}/recipient-representative")
+    public String setRecipientRepresentative(@PathVariable Long id, @RequestParam String recipientRepresentativeName,
                             HttpServletRequest request, RedirectAttributes redirectAttributes) {
         Resident resident = currentResident(request);
         Parcel parcel = parcelRepository.findById(id).orElse(null);
@@ -65,7 +65,7 @@ public class ResidentController {
                 || parcel.getParcelstatus() != ParcelStatus.AVAILABLE) {
             return "redirect:/resident/dashboard";
         }
-        parcel.authorizeAgent(parcel.getParcelCode(), agentName);
+        parcel.authorizeRecipientRepresentative(parcel.getParcelCode(), recipientRepresentativeName);
         parcelRepository.save(parcel);
         redirectAttributes.addFlashAttribute("toast", "代領授權已完成");
         return "redirect:/resident/dashboard";

@@ -4,7 +4,7 @@ public final class SessionKeys {
     private SessionKeys() {}
 
     public static final String RESIDENT_ID = "residentId";
-    public static final String PARCELMAN_ID = "parcelmanId";
+    public static final String CONCIERGE_ID = "conciergeId";
 
     // in-progress admin pickup wizard state
     public static final String PICKUP_STEP = "pickup.step";

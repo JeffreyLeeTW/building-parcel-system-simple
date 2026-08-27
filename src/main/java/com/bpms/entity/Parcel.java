@@ -36,11 +36,11 @@ public class Parcel {
     @Column(name = "arrival_time", nullable = false)
     private LocalDateTime arrivalTime;
 
-    @Column(name = "agent_name")
-    private String agentName;
+    @Column(name = "recipient_representative_name")
+    private String recipientRepresentativeName;
 
-    @Column(name = "agent_token", unique = true)
-    private String agentToken;
+    @Column(name = "recipient_representative_token", unique = true)
+    private String recipientRepresentativeToken;
 
     // Diagram field "parcelPhoto" does not exist here - the photo is
     // genuinely captured later, at pickup time, and lives on
@@ -55,17 +55,18 @@ public class Parcel {
     }
 
     public boolean isProxy() {
-        return agentName != null && !agentName.isBlank();
+        return recipientRepresentativeName != null && !recipientRepresentativeName.isBlank();
     }
 
     /**
-     * Diagram method: authorizeAgent(ParcelCode: String, AgentName: String): Void.
+     * Diagram method: authorizeAgent(ParcelCode: String, AgentName: String): Void
+     * (Agent renamed to Recipient's Representative).
      * Pure field mutation, no persistence needed here - callers still call
      * save() themselves. parcelCode is accepted to match the diagram's
      * signature; callers pass this parcel's own code.
      */
-    public void authorizeAgent(String parcelCode, String agentName) {
-        this.agentName = agentName == null ? null : agentName.trim();
+    public void authorizeRecipientRepresentative(String parcelCode, String recipientRepresentativeName) {
+        this.recipientRepresentativeName = recipientRepresentativeName == null ? null : recipientRepresentativeName.trim();
     }
 
     /**
@@ -104,8 +105,8 @@ public class Parcel {
     public void setResident(Resident resident) { this.resident = resident; }
     public LocalDateTime getArrivalTime() { return arrivalTime; }
     public void setArrivalTime(LocalDateTime arrivalTime) { this.arrivalTime = arrivalTime; }
-    public String getAgentName() { return agentName; }
-    public void setAgentName(String agentName) { this.agentName = agentName; }
-    public String getAgentToken() { return agentToken; }
-    public void setAgentToken(String agentToken) { this.agentToken = agentToken; }
+    public String getRecipientRepresentativeName() { return recipientRepresentativeName; }
+    public void setRecipientRepresentativeName(String recipientRepresentativeName) { this.recipientRepresentativeName = recipientRepresentativeName; }
+    public String getRecipientRepresentativeToken() { return recipientRepresentativeToken; }
+    public void setRecipientRepresentativeToken(String recipientRepresentativeToken) { this.recipientRepresentativeToken = recipientRepresentativeToken; }
 }

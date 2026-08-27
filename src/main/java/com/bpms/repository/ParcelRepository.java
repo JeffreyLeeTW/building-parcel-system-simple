@@ -18,7 +18,7 @@ public interface ParcelRepository extends JpaRepository<Parcel, Long> {
 
     List<Parcel> findByResidentAndParcelstatusOrderByArrivalTimeDesc(Resident resident, ParcelStatus parcelstatus);
 
-    Optional<Parcel> findByAgentToken(String agentToken);
+    Optional<Parcel> findByRecipientRepresentativeToken(String recipientRepresentativeToken);
 
     /**
      * Diagram method: Parcel.queryParcel(code: String): Parcel.

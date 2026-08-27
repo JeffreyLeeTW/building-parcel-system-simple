@@ -1,7 +1,7 @@
 package com.bpms.web;
 
 import com.bpms.config.SessionKeys;
-import com.bpms.repository.ParcelmanRepository;
+import com.bpms.repository.ConciergeRepository;
 import com.bpms.repository.ResidentRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.ui.Model;
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 public class GlobalModelAdvice {
 
     private final ResidentRepository residentRepository;
-    private final ParcelmanRepository parcelmanRepository;
+    private final ConciergeRepository conciergeRepository;
 
-    public GlobalModelAdvice(ResidentRepository residentRepository, ParcelmanRepository parcelmanRepository) {
+    public GlobalModelAdvice(ResidentRepository residentRepository, ConciergeRepository conciergeRepository) {
         this.residentRepository = residentRepository;
-        this.parcelmanRepository = parcelmanRepository;
+        this.conciergeRepository = conciergeRepository;
     }
 
     @ModelAttribute
@@ -29,9 +29,9 @@ public class GlobalModelAdvice {
             residentRepository.findById((Long) residentId).ifPresent(r -> model.addAttribute("currentResident", r));
         }
 
-        Object parcelmanId = session.getAttribute(SessionKeys.PARCELMAN_ID);
-        if (parcelmanId != null) {
-            parcelmanRepository.findById((Long) parcelmanId).ifPresent(p -> model.addAttribute("currentParcelman", p));
+        Object conciergeId = session.getAttribute(SessionKeys.CONCIERGE_ID);
+        if (conciergeId != null) {
+            conciergeRepository.findById((Long) conciergeId).ifPresent(p -> model.addAttribute("currentConcierge", p));
         }
     }
 }

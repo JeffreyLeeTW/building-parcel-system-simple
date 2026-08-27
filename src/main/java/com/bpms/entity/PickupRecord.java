@@ -29,14 +29,14 @@ public class PickupRecord {
     private byte[] pickupPhoto;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "handling_parcelman_id", nullable = false)
-    private Parcelman handlingParcelman;
+    @JoinColumn(name = "handling_concierge_id", nullable = false)
+    private Concierge handlingConcierge;
 
     @Column(name = "actual_picker_name", nullable = false)
     private String actualPickerName;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "pickup_method", nullable = false, length = 20)
+    @Column(name = "pickup_method", nullable = false, length = 30)
     private PickupMethod pickupMethod;
 
     @Column(name = "signer_note", nullable = false)
@@ -63,8 +63,8 @@ public class PickupRecord {
     public void setPickupTime(LocalDateTime pickupTime) { this.pickupTime = pickupTime; }
     public byte[] getPickupPhoto() { return pickupPhoto; }
     public void setPickupPhoto(byte[] pickupPhoto) { this.pickupPhoto = pickupPhoto; }
-    public Parcelman getHandlingParcelman() { return handlingParcelman; }
-    public void setHandlingParcelman(Parcelman handlingParcelman) { this.handlingParcelman = handlingParcelman; }
+    public Concierge getHandlingConcierge() { return handlingConcierge; }
+    public void setHandlingConcierge(Concierge handlingConcierge) { this.handlingConcierge = handlingConcierge; }
     public String getActualPickerName() { return actualPickerName; }
     public void setActualPickerName(String actualPickerName) { this.actualPickerName = actualPickerName; }
     public PickupMethod getPickupMethod() { return pickupMethod; }

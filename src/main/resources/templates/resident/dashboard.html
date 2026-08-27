@@ -35,11 +35,11 @@
                   <div class="datum"><small>櫃位</small><b th:text="${p.cabinetLabel}"></b></div>
                   <div class="datum"><small>到貨時間</small><b th:text="${#temporals.format(p.arrivalTime, 'yyyy/MM/dd HH:mm')}"></b></div>
                 </div>
-                <div th:if="${p.proxy}" style="margin-top:12px;color:#6f541d" th:text="'代領人：' + ${p.agentName}"></div>
+                <div th:if="${p.proxy}" style="margin-top:12px;color:#6f541d" th:text="'代領人：' + ${p.recipientRepresentativeName}"></div>
               </div>
               <div class="actions">
                 <a class="mini" style="text-decoration:none;display:inline-flex;align-items:center"
-                   th:href="@{'/resident/parcels/' + ${p.id} + '/agent-form'}"
+                   th:href="@{'/resident/parcels/' + ${p.id} + '/recipient-representative-form'}"
                    th:text="${p.proxy} ? '修改代領人' : '設定代領人'"></a>
               </div>
             </article>
@@ -56,7 +56,7 @@
           <tr th:each="r : ${records}">
             <td th:text="${r.parcel.displayCode}"></td>
             <td th:text="${r.actualPickerName}"></td>
-            <td th:text="${r.pickupMethod.name() == 'AGENT'} ? '授權代領' : '本人領取'"></td>
+            <td th:text="${r.pickupMethod.name() == 'RECIPIENT_REPRESENTATIVE'} ? '授權代領' : '本人領取'"></td>
             <td th:text="${#temporals.format(r.pickupTime, 'yyyy/MM/dd HH:mm')}"></td>
           </tr>
           <tr th:if="${#lists.isEmpty(records)}"><td colspan="4" class="empty">尚無領取紀錄</td></tr>
@@ -68,14 +68,14 @@
 </section>
 <div class="toast" id="toast" th:if="${toast}" th:text="${toast}"></div>
 
-<!-- set agent modal -->
-<div class="modal-bg" th:if="${agentParcel != null}">
-  <form class="modal" method="post" th:action="@{'/resident/parcels/' + ${agentParcel.id} + '/agent'}">
+<!-- set recipient's representative modal -->
+<div class="modal-bg" th:if="${recipientRepresentativeParcel != null}">
+  <form class="modal" method="post" th:action="@{'/resident/parcels/' + ${recipientRepresentativeParcel.id} + '/recipient-representative'}">
     <h2>設定包裹代領人</h2>
-    <p th:text="${agentParcel.displayCode} + '｜' + ${agentParcel.resident.roomLabel}"></p>
+    <p th:text="${recipientRepresentativeParcel.displayCode} + '｜' + ${recipientRepresentativeParcel.resident.roomLabel}"></p>
     <div class="field">
       <label>代領人姓名</label>
-      <input name="agentName" required placeholder="請輸入真實姓名" th:value="${agentParcel.agentName}">
+      <input name="recipientRepresentativeName" required placeholder="請輸入真實姓名" th:value="${recipientRepresentativeParcel.recipientRepresentativeName}">
     </div>
     <label class="check">
       <input type="checkbox" required>我授權上述人士代為領取此包裹。

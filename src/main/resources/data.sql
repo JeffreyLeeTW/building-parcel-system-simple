@@ -54,38 +54,38 @@ UPDATE resident SET personal_id = 'C823456789' WHERE email='chengen.wu@example.c
 UPDATE resident SET personal_id = 'C923456789' WHERE email='jiahao.hsu@example.com' AND personal_id IS NULL;
 UPDATE resident SET personal_id = 'A023456789' WHERE email='peishan.tsai@example.com' AND personal_id IS NULL;
 
-INSERT INTO parcelman (name, account, password_hash)
+INSERT INTO concierge (name, account, password_hash)
 SELECT '林怡君','admin.lin','$2b$10$/HePzbpGGhNR/NW2vqUsHOevaBvb.rP42pyvScT26PsCyz5mQw9bS'
-WHERE NOT EXISTS (SELECT 1 FROM parcelman WHERE account='admin.lin');
+WHERE NOT EXISTS (SELECT 1 FROM concierge WHERE account='admin.lin');
 
-INSERT INTO parcelman (name, account, password_hash)
+INSERT INTO concierge (name, account, password_hash)
 SELECT '吳志豪','wu.zhihao','$2b$10$/HePzbpGGhNR/NW2vqUsHOevaBvb.rP42pyvScT26PsCyz5mQw9bS'
-WHERE NOT EXISTS (SELECT 1 FROM parcelman WHERE account='wu.zhihao');
+WHERE NOT EXISTS (SELECT 1 FROM concierge WHERE account='wu.zhihao');
 
 -- Demo parcels
-INSERT INTO parcel (parcel_code, status, cabinet_area, cabinet_number, resident_id, arrival_time, agent_name, agent_token)
+INSERT INTO parcel (parcel_code, status, cabinet_area, cabinet_number, resident_id, arrival_time, recipient_representative_name, recipient_representative_token)
 SELECT '4826','AVAILABLE','C','18',(SELECT id FROM resident WHERE email='yian.chen@example.com'),
        TIMESTAMP '2026-08-18 10:22:00', NULL, 'seed-token-4826'
 WHERE NOT EXISTS (SELECT 1 FROM parcel WHERE parcel_code='4826' AND cabinet_area='C' AND cabinet_number='18');
 
-INSERT INTO parcel (parcel_code, status, cabinet_area, cabinet_number, resident_id, arrival_time, agent_name, agent_token)
+INSERT INTO parcel (parcel_code, status, cabinet_area, cabinet_number, resident_id, arrival_time, recipient_representative_name, recipient_representative_token)
 SELECT '7319','AVAILABLE','A','07',(SELECT id FROM resident WHERE email='yian.chen@example.com'),
        TIMESTAMP '2026-08-18 09:35:00', '黃雅雯', 'seed-token-7319'
 WHERE NOT EXISTS (SELECT 1 FROM parcel WHERE parcel_code='7319' AND cabinet_area='A' AND cabinet_number='07');
 
-INSERT INTO parcel (parcel_code, status, cabinet_area, cabinet_number, resident_id, arrival_time, agent_name, agent_token)
+INSERT INTO parcel (parcel_code, status, cabinet_area, cabinet_number, resident_id, arrival_time, recipient_representative_name, recipient_representative_token)
 SELECT '3504','AVAILABLE','B','11',(SELECT id FROM resident WHERE email='yating.chang@example.com'),
        TIMESTAMP '2026-08-17 16:48:00', NULL, 'seed-token-3504'
 WHERE NOT EXISTS (SELECT 1 FROM parcel WHERE parcel_code='3504' AND cabinet_area='B' AND cabinet_number='11');
 
-INSERT INTO parcel (parcel_code, status, cabinet_area, cabinet_number, resident_id, arrival_time, agent_name, agent_token)
+INSERT INTO parcel (parcel_code, status, cabinet_area, cabinet_number, resident_id, arrival_time, recipient_representative_name, recipient_representative_token)
 SELECT '2291','PICKED_UP','D','03',(SELECT id FROM resident WHERE email='kuanting.li@example.com'),
        TIMESTAMP '2026-08-17 14:10:00', NULL, 'seed-token-2291'
 WHERE NOT EXISTS (SELECT 1 FROM parcel WHERE parcel_code='2291' AND cabinet_area='D' AND cabinet_number='03');
 
-INSERT INTO pickup_record (parcel_id, pickup_time, pickup_photo, handling_parcelman_id, actual_picker_name, pickup_method, signer_note)
+INSERT INTO pickup_record (parcel_id, pickup_time, pickup_photo, handling_concierge_id, actual_picker_name, pickup_method, signer_note)
 SELECT p.id, TIMESTAMP '2026-08-17 18:32:00', NULL,
-       (SELECT id FROM parcelman WHERE account='wu.zhihao'), '李冠廷', 'SELF', '由領受人本人簽收'
+       (SELECT id FROM concierge WHERE account='wu.zhihao'), '李冠廷', 'SELF', '由Recipient本人簽收'
 FROM parcel p
 WHERE p.parcel_code='2291' AND p.cabinet_area='D' AND p.cabinet_number='03'
   AND NOT EXISTS (SELECT 1 FROM pickup_record pr WHERE pr.parcel_id = p.id);

@@ -40,10 +40,10 @@ public class MailService {
      * own descriptive name.
      */
     public void sendNotification(Resident resident, Parcel parcel) {
-        String agentLink = baseUrl + "/agent-authorize?token=" + parcel.getAgentToken();
+        String recipientRepresentativeLink = baseUrl + "/recipient-representative-authorize?token=" + parcel.getRecipientRepresentativeToken();
         String body = "%s 您好，\n\n您有一件包裹已送達管理室，資訊如下：\n\n包裹碼：%s\n櫃位：%s\n到貨時間：%s\n\n請攜帶實體身分證件至管理室，向管理員出示「4 位數包裹碼」即可領取。\n\n若您無法親自領取，可點擊以下連結，線上設定代領人：\n%s\n\n（此為系統自動發送信件，請勿直接回覆）"
                 .formatted(resident.getResidentName(), parcel.getParcelCode(), parcel.getCabinetLabel(),
-                        parcel.getArrivalTime().format(FORMAT), agentLink);
+                        parcel.getArrivalTime().format(FORMAT), recipientRepresentativeLink);
         send(resident.getResidentEmail(), "【大樓包裹管理平台】包裹到貨通知", body);
     }
 
@@ -53,7 +53,7 @@ public class MailService {
                         parcel.isProxy() ? "授權代領" : "本人領取",
                         record.getActualPickerName(),
                         record.getPickupTime().format(FORMAT),
-                        record.getHandlingParcelman().getParcelmanName());
+                        record.getHandlingConcierge().getConciergeName());
         send(resident.getResidentEmail(), "【大樓包裹管理平台】包裹領取簽收確認", body);
     }
 

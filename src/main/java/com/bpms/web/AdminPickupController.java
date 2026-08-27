@@ -2,10 +2,10 @@ package com.bpms.web;
 
 import com.bpms.config.SessionKeys;
 import com.bpms.entity.Parcel;
-import com.bpms.entity.Parcelman;
+import com.bpms.entity.Concierge;
 import com.bpms.entity.PickupRecord;
 import com.bpms.repository.ParcelRepository;
-import com.bpms.repository.ParcelmanRepository;
+import com.bpms.repository.ConciergeRepository;
 import com.bpms.repository.PickupRecordRepository;
 import com.bpms.service.PickupService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,14 +24,14 @@ public class AdminPickupController {
     private static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm");
 
     private final ParcelRepository parcelRepository;
-    private final ParcelmanRepository parcelmanRepository;
+    private final ConciergeRepository conciergeRepository;
     private final PickupRecordRepository pickupRecordRepository;
     private final PickupService pickupService;
 
-    public AdminPickupController(ParcelRepository parcelRepository, ParcelmanRepository parcelmanRepository,
+    public AdminPickupController(ParcelRepository parcelRepository, ConciergeRepository conciergeRepository,
                                   PickupRecordRepository pickupRecordRepository, PickupService pickupService) {
         this.parcelRepository = parcelRepository;
-        this.parcelmanRepository = parcelmanRepository;
+        this.conciergeRepository = conciergeRepository;
         this.pickupRecordRepository = pickupRecordRepository;
         this.pickupService = pickupService;
     }
@@ -121,13 +121,13 @@ public class AdminPickupController {
         HttpSession session = request.getSession(true);
         Long parcelId = (Long) session.getAttribute(SessionKeys.PICKUP_PARCEL_ID);
         boolean verified = Boolean.TRUE.equals(session.getAttribute(SessionKeys.PICKUP_VERIFIED));
-        Long parcelmanId = (Long) session.getAttribute(SessionKeys.PARCELMAN_ID);
+        Long conciergeId = (Long) session.getAttribute(SessionKeys.CONCIERGE_ID);
 
         if (parcelId == null || !verified || photoData == null || photoData.isBlank()) {
             return "redirect:/admin/pickup";
         }
         Parcel parcel = parcelRepository.findById(parcelId).orElse(null);
-        Parcelman admin = parcelmanRepository.findById(parcelmanId).orElse(null);
+        Concierge admin = conciergeRepository.findById(conciergeId).orElse(null);
         if (parcel == null || admin == null || parcel.getParcelstatus() != com.bpms.entity.ParcelStatus.AVAILABLE) {
             resetSession(session);
             return "redirect:/admin/pickup";

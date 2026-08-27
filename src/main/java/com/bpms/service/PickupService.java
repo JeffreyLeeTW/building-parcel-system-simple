@@ -43,23 +43,24 @@ public class PickupService {
     }
 
     /**
-     * Diagram method: Parcelman.createPickupRecord(): PickupRecord.
+     * Diagram method: Parcelman.createPickupRecord(): PickupRecord
+     * (Parcelman renamed to Concierge).
      * Needs ParcelRepository/PickupRecordRepository access plus mailing, so
-     * it stays here rather than on the Parcelman entity; renamed from
+     * it stays here rather than on the Concierge entity; renamed from
      * confirmPickup to match the diagram.
      */
-    public PickupRecord createPickupRecord(Parcel parcel, Parcelman admin, String photoDataUrl) {
+    public PickupRecord createPickupRecord(Parcel parcel, Concierge admin, String photoDataUrl) {
         byte[] photoBytes = decodeDataUrl(photoDataUrl);
 
-        PickupMethod method = parcel.isProxy() ? PickupMethod.AGENT : PickupMethod.SELF;
-        String actualPickerName = parcel.isProxy() ? parcel.getAgentName() : parcel.getResident().getResidentName();
-        String signerNote = parcel.isProxy() ? "由代領人簽收" : "由領受人本人簽收";
+        PickupMethod method = parcel.isProxy() ? PickupMethod.RECIPIENT_REPRESENTATIVE : PickupMethod.SELF;
+        String actualPickerName = parcel.isProxy() ? parcel.getRecipientRepresentativeName() : parcel.getResident().getResidentName();
+        String signerNote = parcel.isProxy() ? "由代領人簽收" : "由Recipient本人簽收";
 
         PickupRecord record = new PickupRecord();
         record.setParcel(parcel);
         record.setPickupTime(LocalDateTime.now());
         record.uploadPickupPhoto(photoBytes);
-        record.setHandlingParcelman(admin);
+        record.setHandlingConcierge(admin);
         record.setActualPickerName(actualPickerName);
         record.setPickupMethod(method);
         record.setSignerNote(signerNote);

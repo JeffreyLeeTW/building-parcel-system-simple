@@ -2,5 +2,5 @@ package com.bpms.entity;
 
 public enum PickupMethod {
     SELF,
-    AGENT
+    RECIPIENT_REPRESENTATIVE
 }

@@ -1,9 +1,9 @@
 package com.bpms.web;
 
 import com.bpms.config.SessionKeys;
-import com.bpms.entity.Parcelman;
+import com.bpms.entity.Concierge;
 import com.bpms.entity.Resident;
-import com.bpms.repository.ParcelmanRepository;
+import com.bpms.repository.ConciergeRepository;
 import com.bpms.repository.ResidentRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class AuthController {
 
     private final ResidentRepository residentRepository;
-    private final ParcelmanRepository parcelmanRepository;
+    private final ConciergeRepository conciergeRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthController(ResidentRepository residentRepository, ParcelmanRepository parcelmanRepository, PasswordEncoder passwordEncoder) {
+    public AuthController(ResidentRepository residentRepository, ConciergeRepository conciergeRepository, PasswordEncoder passwordEncoder) {
         this.residentRepository = residentRepository;
-        this.parcelmanRepository = parcelmanRepository;
+        this.conciergeRepository = conciergeRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -63,12 +63,12 @@ public class AuthController {
     @PostMapping("/admin/login")
     public String adminLogin(@RequestParam String account, @RequestParam String password,
                               HttpServletRequest request, Model model) {
-        var parcelman = parcelmanRepository.findByParcelmanAccount(account).orElse(null);
-        if (parcelman == null || !parcelman.verifyIdentity(password, passwordEncoder)) {
+        var concierge = conciergeRepository.findByConciergeAccount(account).orElse(null);
+        if (concierge == null || !concierge.verifyIdentity(password, passwordEncoder)) {
             model.addAttribute("error", "帳號或密碼錯誤");
             return "login-admin";
         }
-        request.getSession(true).setAttribute(SessionKeys.PARCELMAN_ID, parcelman.getParcelmanID());
+        request.getSession(true).setAttribute(SessionKeys.CONCIERGE_ID, concierge.getConciergeID());
         return "redirect:/admin/pickup";
     }
 
