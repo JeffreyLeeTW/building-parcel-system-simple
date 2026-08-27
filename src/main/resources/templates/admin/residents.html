@@ -23,14 +23,14 @@
           </thead>
           <tbody>
           <tr th:each="r : ${residents}">
-            <td><b th:text="${r.name}"></b></td>
+            <td><b th:text="${r.residentName}"></b></td>
             <td th:text="${r.roomLabel}"></td>
-            <td th:text="${r.email}"></td>
+            <td th:text="${r.residentEmail}"></td>
             <td>••••••••</td>
             <td>
               <div class="resident-actions">
-                <a class="mini" style="text-decoration:none;display:inline-flex;align-items:center" th:href="@{'/admin/residents/' + ${r.id} + '/edit'}">修改</a>
-                <a class="mini danger" style="text-decoration:none;display:inline-flex;align-items:center" th:href="@{'/admin/residents/' + ${r.id} + '/delete-confirm'}">刪除</a>
+                <a class="mini" style="text-decoration:none;display:inline-flex;align-items:center" th:href="@{'/admin/residents/' + ${r.residentId} + '/edit'}">修改</a>
+                <a class="mini danger" style="text-decoration:none;display:inline-flex;align-items:center" th:href="@{'/admin/residents/' + ${r.residentId} + '/delete-confirm'}">刪除</a>
               </div>
             </td>
           </tr>
@@ -46,11 +46,11 @@
 <!-- add / edit modal -->
 <div class="modal-bg" th:if="${showForm}">
   <form class="modal" method="post"
-        th:action="${editing} ? @{'/admin/residents/' + ${editResident.id}} : @{/admin/residents}">
+        th:action="${editing} ? @{'/admin/residents/' + ${editResident.residentId}} : @{/admin/residents}">
     <h2 th:text="${editing} ? '修改住戶' : '新增住戶'"></h2>
     <div class="field">
       <label>住戶姓名</label>
-      <input name="name" required th:value="${editing} ? ${editResident.name} : ''">
+      <input name="name" required th:value="${editing} ? ${editResident.residentName} : ''">
     </div>
     <div class="resident-modal-room">
       <label>房號／樓層</label>
@@ -74,11 +74,11 @@
     </div>
     <div class="field">
       <label>Email</label>
-      <input name="email" type="email" required th:value="${editing} ? ${editResident.email} : ''">
+      <input name="email" type="email" required th:value="${editing} ? ${editResident.residentEmail} : ''">
     </div>
     <div class="field">
       <label>身分證字號（供領取現場人工核對，可留空）</label>
-      <input name="personalId" th:value="${editing} ? ${editResident.personalId} : ''">
+      <input name="personalId" th:value="${editing} ? ${editResident.residentPersonalId} : ''">
     </div>
     <div class="field">
       <label th:text="${editing} ? '新密碼（不修改可留空）' : '密碼'"></label>
@@ -95,10 +95,10 @@
 <div class="modal-bg" th:if="${deleteResident != null}">
   <div class="modal">
     <h2>刪除住戶？</h2>
-    <p th:text="'確定要刪除「' + ${deleteResident.name} + '／' + ${deleteResident.roomLabel} + '」的住戶資料嗎？'"></p>
+    <p th:text="'確定要刪除「' + ${deleteResident.residentName} + '／' + ${deleteResident.roomLabel} + '」的住戶資料嗎？'"></p>
     <div class="modal-actions">
       <a class="button secondary" style="line-height:40px;text-decoration:none" th:href="@{/admin/residents}">取消</a>
-      <form method="post" th:action="@{'/admin/residents/' + ${deleteResident.id} + '/delete'}">
+      <form method="post" th:action="@{'/admin/residents/' + ${deleteResident.residentId} + '/delete'}">
         <button class="button danger" type="submit">確認刪除</button>
       </form>
     </div>

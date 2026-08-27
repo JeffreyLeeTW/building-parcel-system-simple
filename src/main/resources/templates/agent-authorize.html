@@ -27,7 +27,7 @@
 
       <form th:if="${parcel != null and done == null}" method="post" th:action="@{/agent-authorize}">
         <div class="access-title">設定包裹代領人</div>
-        <p class="access-sub" th:text="${parcel.resident.name} + '｜' + ${parcel.resident.roomLabel} + '　包裹碼：' + ${parcel.parcelCode}"></p>
+        <p class="access-sub" th:text="${parcel.resident.residentName} + '｜' + ${parcel.resident.roomLabel} + '　包裹碼：' + ${parcel.parcelCode}"></p>
         <input type="hidden" name="token" th:value="${token}">
         <div class="field" style="margin-top:24px">
           <label>代領人姓名</label>

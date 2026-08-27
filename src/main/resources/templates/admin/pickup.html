@@ -74,11 +74,11 @@
                     <div class="verify-list">
                       <div class="verify-item">
                         <small th:text="${parcel.proxy} ? '原住戶' : '住戶'"></small>
-                        <b th:text="${parcel.resident.name}"></b>
+                        <b th:text="${parcel.resident.residentName}"></b>
                       </div>
-                      <div class="verify-item" th:if="${!parcel.proxy and parcel.resident.personalId != null and !parcel.resident.personalId.isBlank()}">
+                      <div class="verify-item" th:if="${!parcel.proxy and parcel.resident.residentPersonalId != null and !parcel.resident.residentPersonalId.isBlank()}">
                         <small>身分證字號</small>
-                        <b th:text="${parcel.resident.personalId}"></b>
+                        <b th:text="${parcel.resident.residentPersonalId}"></b>
                       </div>
                       <div class="verify-item">
                         <small>房號</small>
@@ -153,7 +153,7 @@
                 <div class="modal-data">
                   <div><span>包裹編號</span><b th:text="${parcel.displayCode}"></b></div>
                   <div><span>領取方式</span><b th:text="${parcel.proxy} ? '授權代領' : '本人領取'"></b></div>
-                  <div><span>領取人</span><b th:text="${parcel.proxy} ? ${parcel.agentName} : ${parcel.resident.name}"></b></div>
+                  <div><span>領取人</span><b th:text="${parcel.proxy} ? ${parcel.agentName} : ${parcel.resident.residentName}"></b></div>
                   <div><span>櫃位</span><b th:text="${parcel.cabinetLabel}"></b></div>
                 </div>
                 <div class="modal-actions">
@@ -177,7 +177,7 @@
             </div>
             <div class="summary-row">
               <div class="datum"><small>櫃位</small><b th:text="${record.parcel.cabinetLabel}"></b></div>
-              <div class="datum"><small>管理員</small><b th:text="${record.handlingParcelman.name}"></b></div>
+              <div class="datum"><small>管理員</small><b th:text="${record.handlingParcelman.parcelmanName}"></b></div>
               <div class="datum"><small>包裹狀態</small><span class="badge picked">已領取</span></div>
             </div>
           </div>

@@ -33,7 +33,7 @@ public class ResidentController {
     @GetMapping("/resident/dashboard")
     public String dashboard(HttpServletRequest request, Model model) {
         Resident resident = currentResident(request);
-        var mine = parcelRepository.findByResidentAndStatusOrderByArrivalTimeDesc(resident, ParcelStatus.AVAILABLE);
+        var mine = parcelRepository.findByResidentAndParcelstatusOrderByArrivalTimeDesc(resident, ParcelStatus.AVAILABLE);
         var records = pickupRecordRepository.findByParcel_ResidentOrderByPickupTimeDesc(resident);
         model.addAttribute("parcels", mine);
         model.addAttribute("records", records);
@@ -43,13 +43,13 @@ public class ResidentController {
     @GetMapping("/resident/parcels/{id}/agent-form")
     public String agentForm(@PathVariable Long id, HttpServletRequest request, Model model) {
         Resident resident = currentResident(request);
-        var mine = parcelRepository.findByResidentAndStatusOrderByArrivalTimeDesc(resident, ParcelStatus.AVAILABLE);
+        var mine = parcelRepository.findByResidentAndParcelstatusOrderByArrivalTimeDesc(resident, ParcelStatus.AVAILABLE);
         var records = pickupRecordRepository.findByParcel_ResidentOrderByPickupTimeDesc(resident);
         model.addAttribute("parcels", mine);
         model.addAttribute("records", records);
 
         Parcel parcel = parcelRepository.findById(id).orElse(null);
-        if (parcel == null || !parcel.getResident().getId().equals(resident.getId())) {
+        if (parcel == null || !parcel.getResident().getResidentId().equals(resident.getResidentId())) {
             return "redirect:/resident/dashboard";
         }
         model.addAttribute("agentParcel", parcel);
@@ -61,11 +61,11 @@ public class ResidentController {
                             HttpServletRequest request, RedirectAttributes redirectAttributes) {
         Resident resident = currentResident(request);
         Parcel parcel = parcelRepository.findById(id).orElse(null);
-        if (parcel == null || !parcel.getResident().getId().equals(resident.getId())
-                || parcel.getStatus() != ParcelStatus.AVAILABLE) {
+        if (parcel == null || !parcel.getResident().getResidentId().equals(resident.getResidentId())
+                || parcel.getParcelstatus() != ParcelStatus.AVAILABLE) {
             return "redirect:/resident/dashboard";
         }
-        parcel.setAgentName(agentName.trim());
+        parcel.authorizeAgent(parcel.getParcelCode(), agentName);
         parcelRepository.save(parcel);
         redirectAttributes.addFlashAttribute("toast", "代領授權已完成");
         return "redirect:/resident/dashboard";
