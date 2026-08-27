@@ -7,6 +7,8 @@ import java.time.LocalDateTime;
 @Table(name = "parcel")
 public class Parcel {
 
+    // Not in the UML diagram (primary keys are usually omitted there), left
+    // as-is - every other class/service in this codebase keys off it.
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -14,9 +16,12 @@ public class Parcel {
     @Column(name = "parcel_code", nullable = false, length = 4)
     private String parcelCode;
 
+    // Diagram spells this field "parcelstatus" (all lowercase, unlike normal
+    // camelCase) - kept exactly as diagrammed. Type stays the ParcelStatus
+    // enum rather than String for correctness; see updateStatus() below.
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 20)
-    private ParcelStatus status;
+    @Column(name = "status", nullable = false, length = 20)
+    private ParcelStatus parcelstatus;
 
     @Column(name = "cabinet_area", nullable = false, length = 1)
     private String cabinetArea;
@@ -37,6 +42,10 @@ public class Parcel {
     @Column(name = "agent_token", unique = true)
     private String agentToken;
 
+    // Diagram field "parcelPhoto" does not exist here - the photo is
+    // genuinely captured later, at pickup time, and lives on
+    // PickupRecord.pickupPhoto instead. Not duplicated onto Parcel.
+
     public String getDisplayCode() {
         return "PKG-" + arrivalTime.toLocalDate().toString().replace("-", "") + "-" + String.format("%04d", id);
     }
@@ -49,12 +58,44 @@ public class Parcel {
         return agentName != null && !agentName.isBlank();
     }
 
+    /**
+     * Diagram method: authorizeAgent(ParcelCode: String, AgentName: String): Void.
+     * Pure field mutation, no persistence needed here - callers still call
+     * save() themselves. parcelCode is accepted to match the diagram's
+     * signature; callers pass this parcel's own code.
+     */
+    public void authorizeAgent(String parcelCode, String agentName) {
+        this.agentName = agentName == null ? null : agentName.trim();
+    }
+
+    /**
+     * Diagram method: updateStatus(newStatus: String): Void.
+     * The diagram implies a String parameter, but the backing field is the
+     * ParcelStatus enum - kept as ParcelStatus here for correctness rather
+     * than downgrading to String.
+     */
+    public void updateStatus(ParcelStatus newStatus) {
+        this.parcelstatus = newStatus;
+    }
+
+    /**
+     * Diagram method: verifyCode(code: String): Boolean.
+     * A narrow instance-level check: does the given code match this parcel's
+     * own code while it is still available? This is much narrower than
+     * PickupService.search(), which looks a code up across the whole
+     * repository and distinguishes "already picked up" from "not found" -
+     * that logic inherently needs the repository and stays there.
+     */
+    public boolean verifyCode(String code) {
+        return parcelCode != null && parcelCode.equals(code) && parcelstatus == ParcelStatus.AVAILABLE;
+    }
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getParcelCode() { return parcelCode; }
     public void setParcelCode(String parcelCode) { this.parcelCode = parcelCode; }
-    public ParcelStatus getStatus() { return status; }
-    public void setStatus(ParcelStatus status) { this.status = status; }
+    public ParcelStatus getParcelstatus() { return parcelstatus; }
+    public void setParcelstatus(ParcelStatus parcelstatus) { this.parcelstatus = parcelstatus; }
     public String getCabinetArea() { return cabinetArea; }
     public void setCabinetArea(String cabinetArea) { this.cabinetArea = cabinetArea; }
     public String getCabinetNumber() { return cabinetNumber; }

@@ -39,12 +39,12 @@ public class AuthController {
     @PostMapping("/login/resident")
     public String residentLogin(@RequestParam String email, @RequestParam String password,
                                  HttpServletRequest request, Model model) {
-        var resident = residentRepository.findByEmail(email).orElse(null);
+        var resident = residentRepository.findByResidentEmail(email).orElse(null);
         if (resident == null || !passwordEncoder.matches(password, resident.getPasswordHash())) {
             model.addAttribute("error", "帳號或密碼錯誤");
             return "login-resident";
         }
-        request.getSession(true).setAttribute(SessionKeys.RESIDENT_ID, resident.getId());
+        request.getSession(true).setAttribute(SessionKeys.RESIDENT_ID, resident.getResidentId());
         return "redirect:/resident/dashboard";
     }
 
@@ -63,12 +63,12 @@ public class AuthController {
     @PostMapping("/admin/login")
     public String adminLogin(@RequestParam String account, @RequestParam String password,
                               HttpServletRequest request, Model model) {
-        var parcelman = parcelmanRepository.findByAccount(account).orElse(null);
-        if (parcelman == null || !passwordEncoder.matches(password, parcelman.getPasswordHash())) {
+        var parcelman = parcelmanRepository.findByParcelmanAccount(account).orElse(null);
+        if (parcelman == null || !parcelman.verifyIdentity(password, passwordEncoder)) {
             model.addAttribute("error", "帳號或密碼錯誤");
             return "login-admin";
         }
-        request.getSession(true).setAttribute(SessionKeys.PARCELMAN_ID, parcelman.getId());
+        request.getSession(true).setAttribute(SessionKeys.PARCELMAN_ID, parcelman.getParcelmanID());
         return "redirect:/admin/pickup";
     }
 

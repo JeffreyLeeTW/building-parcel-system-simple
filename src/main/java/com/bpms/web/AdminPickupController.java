@@ -128,14 +128,14 @@ public class AdminPickupController {
         }
         Parcel parcel = parcelRepository.findById(parcelId).orElse(null);
         Parcelman admin = parcelmanRepository.findById(parcelmanId).orElse(null);
-        if (parcel == null || admin == null || parcel.getStatus() != com.bpms.entity.ParcelStatus.AVAILABLE) {
+        if (parcel == null || admin == null || parcel.getParcelstatus() != com.bpms.entity.ParcelStatus.AVAILABLE) {
             resetSession(session);
             return "redirect:/admin/pickup";
         }
 
-        PickupRecord record = pickupService.confirmPickup(parcel, admin, photoData);
+        PickupRecord record = pickupService.createPickupRecord(parcel, admin, photoData);
 
-        session.setAttribute(SessionKeys.PICKUP_LAST_RECORD_ID, record.getId());
+        session.setAttribute(SessionKeys.PICKUP_LAST_RECORD_ID, record.getPickupRecordId());
         session.removeAttribute(SessionKeys.PICKUP_PARCEL_ID);
         session.removeAttribute(SessionKeys.PICKUP_VERIFIED);
         session.setAttribute(SessionKeys.PICKUP_STEP, 4);

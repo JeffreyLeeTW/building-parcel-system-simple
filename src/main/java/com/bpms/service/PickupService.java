@@ -28,12 +28,12 @@ public class PickupService {
     public record NotFound() implements SearchResult {}
 
     public SearchResult search(String code) {
-        Optional<Parcel> available = parcelRepository.findFirstByParcelCodeAndStatus(code, ParcelStatus.AVAILABLE);
+        Optional<Parcel> available = parcelRepository.findFirstByParcelCodeAndParcelstatus(code, ParcelStatus.AVAILABLE);
         if (available.isPresent()) {
             return new Found(available.get());
         }
         Optional<Parcel> recent = parcelRepository.findFirstByParcelCodeOrderByArrivalTimeDesc(code);
-        if (recent.isPresent() && recent.get().getStatus() == ParcelStatus.PICKED_UP) {
+        if (recent.isPresent() && recent.get().getParcelstatus() == ParcelStatus.PICKED_UP) {
             LocalDateTime pickupTime = pickupRecordRepository.findFirstByParcelOrderByPickupTimeDesc(recent.get())
                     .map(PickupRecord::getPickupTime)
                     .orElse(recent.get().getArrivalTime());
@@ -42,24 +42,30 @@ public class PickupService {
         return new NotFound();
     }
 
-    public PickupRecord confirmPickup(Parcel parcel, Parcelman admin, String photoDataUrl) {
+    /**
+     * Diagram method: Parcelman.createPickupRecord(): PickupRecord.
+     * Needs ParcelRepository/PickupRecordRepository access plus mailing, so
+     * it stays here rather than on the Parcelman entity; renamed from
+     * confirmPickup to match the diagram.
+     */
+    public PickupRecord createPickupRecord(Parcel parcel, Parcelman admin, String photoDataUrl) {
         byte[] photoBytes = decodeDataUrl(photoDataUrl);
 
         PickupMethod method = parcel.isProxy() ? PickupMethod.AGENT : PickupMethod.SELF;
-        String actualPickerName = parcel.isProxy() ? parcel.getAgentName() : parcel.getResident().getName();
+        String actualPickerName = parcel.isProxy() ? parcel.getAgentName() : parcel.getResident().getResidentName();
         String signerNote = parcel.isProxy() ? "由代領人簽收" : "由領受人本人簽收";
 
         PickupRecord record = new PickupRecord();
         record.setParcel(parcel);
         record.setPickupTime(LocalDateTime.now());
-        record.setPickupPhoto(photoBytes);
+        record.uploadPickupPhoto(photoBytes);
         record.setHandlingParcelman(admin);
         record.setActualPickerName(actualPickerName);
         record.setPickupMethod(method);
         record.setSignerNote(signerNote);
         record = pickupRecordRepository.save(record);
 
-        parcel.setStatus(ParcelStatus.PICKED_UP);
+        parcel.updateStatus(ParcelStatus.PICKED_UP);
         parcelRepository.save(parcel);
 
         mailService.sendPickupConfirmation(parcel.getResident(), parcel, record);

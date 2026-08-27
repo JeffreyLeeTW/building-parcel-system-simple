@@ -66,10 +66,10 @@ public class AdminRegisterController {
     }
 
     private List<Map<String, Object>> residentOptions() {
-        return residentRepository.findAllByOrderByIdAsc().stream().map(r -> {
+        return residentRepository.findAllByOrderByResidentIdAsc().stream().map(r -> {
             Map<String, Object> m = new LinkedHashMap<>();
-            m.put("id", r.getId());
-            m.put("name", r.getName());
+            m.put("id", r.getResidentId());
+            m.put("name", r.getResidentName());
             m.put("buildingCode", r.getBuildingCode());
             m.put("floor", r.getFloor());
             m.put("unit", r.getUnit());

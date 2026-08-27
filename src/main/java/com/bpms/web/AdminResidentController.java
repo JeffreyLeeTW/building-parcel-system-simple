@@ -27,14 +27,14 @@ public class AdminResidentController {
 
     @GetMapping
     public String list(Model model) {
-        model.addAttribute("residents", residentRepository.findAllByOrderByIdAsc());
+        model.addAttribute("residents", residentRepository.findAllByOrderByResidentIdAsc());
         addRoomOptions(model);
         return "admin/residents";
     }
 
     @GetMapping("/new")
     public String newForm(Model model) {
-        model.addAttribute("residents", residentRepository.findAllByOrderByIdAsc());
+        model.addAttribute("residents", residentRepository.findAllByOrderByResidentIdAsc());
         addRoomOptions(model);
         model.addAttribute("showForm", true);
         model.addAttribute("editing", false);
@@ -43,7 +43,7 @@ public class AdminResidentController {
 
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
-        model.addAttribute("residents", residentRepository.findAllByOrderByIdAsc());
+        model.addAttribute("residents", residentRepository.findAllByOrderByResidentIdAsc());
         addRoomOptions(model);
         Resident resident = residentRepository.findById(id).orElse(null);
         if (resident == null) return "redirect:/admin/residents";
@@ -55,7 +55,7 @@ public class AdminResidentController {
 
     @GetMapping("/{id}/delete-confirm")
     public String deleteConfirm(@PathVariable Long id, Model model) {
-        model.addAttribute("residents", residentRepository.findAllByOrderByIdAsc());
+        model.addAttribute("residents", residentRepository.findAllByOrderByResidentIdAsc());
         addRoomOptions(model);
         Resident resident = residentRepository.findById(id).orElse(null);
         if (resident == null) return "redirect:/admin/residents";

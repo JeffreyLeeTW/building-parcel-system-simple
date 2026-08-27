@@ -30,22 +30,31 @@ public class MailService {
         this.fromAddress = fromAddress;
     }
 
-    public void sendArrivalNotification(Resident resident, Parcel parcel) {
+    /**
+     * Diagram method: Parcel.sendNotification(): Void.
+     * Sends the arrival notification for a newly-registered parcel. Kept on
+     * MailService (not the Parcel entity) since it needs JavaMailSender;
+     * renamed from sendArrivalNotification to match the diagram.
+     * sendPickupConfirmation below is a distinct notification (the pickup
+     * receipt) that the diagram does not separately name, so it keeps its
+     * own descriptive name.
+     */
+    public void sendNotification(Resident resident, Parcel parcel) {
         String agentLink = baseUrl + "/agent-authorize?token=" + parcel.getAgentToken();
         String body = "%s 您好，\n\n您有一件包裹已送達管理室，資訊如下：\n\n包裹碼：%s\n櫃位：%s\n到貨時間：%s\n\n請攜帶實體身分證件至管理室，向管理員出示「4 位數包裹碼」即可領取。\n\n若您無法親自領取，可點擊以下連結，線上設定代領人：\n%s\n\n（此為系統自動發送信件，請勿直接回覆）"
-                .formatted(resident.getName(), parcel.getParcelCode(), parcel.getCabinetLabel(),
+                .formatted(resident.getResidentName(), parcel.getParcelCode(), parcel.getCabinetLabel(),
                         parcel.getArrivalTime().format(FORMAT), agentLink);
-        send(resident.getEmail(), "【大樓包裹管理平台】包裹到貨通知", body);
+        send(resident.getResidentEmail(), "【大樓包裹管理平台】包裹到貨通知", body);
     }
 
     public void sendPickupConfirmation(Resident resident, Parcel parcel, PickupRecord record) {
         String body = "%s 您好，\n\n您的包裹已完成領取簽收，資訊如下：\n\n包裹編號：%s\n領取方式：%s\n實際領取人：%s\n領取時間：%s\n經辦管理員：%s\n\n若非您本人或授權代領人領取，請盡速聯繫大樓管理室。\n\n（此為系統自動發送信件，請勿直接回覆）"
-                .formatted(resident.getName(), parcel.getDisplayCode(),
+                .formatted(resident.getResidentName(), parcel.getDisplayCode(),
                         parcel.isProxy() ? "授權代領" : "本人領取",
                         record.getActualPickerName(),
                         record.getPickupTime().format(FORMAT),
-                        record.getHandlingParcelman().getName());
-        send(resident.getEmail(), "【大樓包裹管理平台】包裹領取簽收確認", body);
+                        record.getHandlingParcelman().getParcelmanName());
+        send(resident.getResidentEmail(), "【大樓包裹管理平台】包裹領取簽收確認", body);
     }
 
     private void send(String to, String subject, String body) {

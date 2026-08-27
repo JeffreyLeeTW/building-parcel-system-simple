@@ -5,7 +5,7 @@
   <div class="brand">大樓包裹管理平台｜住戶</div>
   <div class="top-right">
     <div class="user">
-      <b th:text="${currentResident != null ? currentResident.name : ''}">住戶</b>
+      <b th:text="${currentResident != null ? currentResident.residentName : ''}">住戶</b>
       <small th:text="${currentResident != null ? currentResident.roomLabel : ''}"></small>
     </div>
     <a class="outline" style="line-height:34px;text-decoration:none;display:inline-block" th:href="@{/admin/login}">管理員頁面</a>

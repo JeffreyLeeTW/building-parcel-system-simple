@@ -10,13 +10,24 @@ import java.util.Optional;
 
 public interface ParcelRepository extends JpaRepository<Parcel, Long> {
 
-    Optional<Parcel> findFirstByParcelCodeAndStatus(String parcelCode, ParcelStatus status);
+    Optional<Parcel> findFirstByParcelCodeAndParcelstatus(String parcelCode, ParcelStatus parcelstatus);
 
     Optional<Parcel> findFirstByParcelCodeOrderByArrivalTimeDesc(String parcelCode);
 
-    boolean existsByParcelCodeAndStatus(String parcelCode, ParcelStatus status);
+    boolean existsByParcelCodeAndParcelstatus(String parcelCode, ParcelStatus parcelstatus);
 
-    List<Parcel> findByResidentAndStatusOrderByArrivalTimeDesc(Resident resident, ParcelStatus status);
+    List<Parcel> findByResidentAndParcelstatusOrderByArrivalTimeDesc(Resident resident, ParcelStatus parcelstatus);
 
     Optional<Parcel> findByAgentToken(String agentToken);
+
+    /**
+     * Diagram method: Parcel.queryParcel(code: String): Parcel.
+     * Spring Data derived-query method names can't literally be
+     * "queryParcel" and still be understood as a query - this is a thin
+     * wrapper under the diagram's name delegating to the equivalent derived
+     * query (most recent parcel for a given code).
+     */
+    default Optional<Parcel> queryParcel(String code) {
+        return findFirstByParcelCodeOrderByArrivalTimeDesc(code);
+    }
 }

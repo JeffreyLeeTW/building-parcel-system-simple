@@ -24,7 +24,7 @@ public class AgentAuthorizeController {
         model.addAttribute("token", token);
         if (parcel == null) {
             model.addAttribute("error", "此連結無效，請確認是否已過期或曾經使用過。");
-        } else if (parcel.getStatus() != ParcelStatus.AVAILABLE) {
+        } else if (parcel.getParcelstatus() != ParcelStatus.AVAILABLE) {
             model.addAttribute("error", "此包裹已完成領取，無法再設定代領人。");
         } else {
             model.addAttribute("parcel", parcel);
@@ -40,11 +40,11 @@ public class AgentAuthorizeController {
             model.addAttribute("error", "此連結無效，請確認是否已過期或曾經使用過。");
             return "agent-authorize";
         }
-        if (parcel.getStatus() != ParcelStatus.AVAILABLE) {
+        if (parcel.getParcelstatus() != ParcelStatus.AVAILABLE) {
             model.addAttribute("error", "此包裹已完成領取，無法再設定代領人。");
             return "agent-authorize";
         }
-        parcel.setAgentName(agentName.trim());
+        parcel.authorizeAgent(parcel.getParcelCode(), agentName);
         parcelRepository.save(parcel);
         model.addAttribute("done", true);
         model.addAttribute("parcel", parcel);
