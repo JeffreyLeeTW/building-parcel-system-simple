@@ -36,13 +36,37 @@ docker compose up --build
 
 若未設定，程式仍可正常運作，只是寄信會在後端 log 顯示失敗、畫面上仍會照常顯示「已寄送」（不影響領取流程）。
 
-`docker compose` 啟動前可先在 shell 匯出：
+設定方式擇一即可：
+
+**方式一：`.env` 檔案（推薦，跨平台通用，Windows 也適用）**
+
+複製 `.env.example` 為 `.env`（與 `docker-compose.yml` 同目錄），填入真實帳密。`docker compose` 會自動讀取此檔案來替換 `docker-compose.yml` 內的變數，不需要額外下指令。`.env` 已加入 `.gitignore`，不會被提交。
+
+```bash
+cp .env.example .env
+# 編輯 .env 填入 MAIL_USERNAME / MAIL_APP_PASSWORD
+docker compose up --build
+```
+
+**方式二：Shell 環境變數**
+
+macOS / Linux / Git Bash：
 
 ```bash
 export MAIL_USERNAME=you@gmail.com
 export MAIL_APP_PASSWORD=xxxxxxxxxxxxxxxx
 docker compose up --build
 ```
+
+Windows PowerShell（`export` 語法不支援，需改用 `$env:`）：
+
+```powershell
+$env:MAIL_USERNAME = "you@gmail.com"
+$env:MAIL_APP_PASSWORD = "xxxxxxxxxxxxxxxx"
+docker compose up --build
+```
+
+注意：`$env:` 設定只在當前的 PowerShell 視窗有效，關閉後就會消失；若常態使用建議改用方式一的 `.env` 檔案。
 
 ## 測試帳號
 

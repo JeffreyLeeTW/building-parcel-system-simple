@@ -7,6 +7,7 @@ RUN mvn -B -q package -DskipTests
 
 FROM eclipse-temurin:21-jre
 WORKDIR /app
+ENV TZ=Asia/Taipei
 COPY --from=build /app/target/bpms-simple.jar app.jar
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]

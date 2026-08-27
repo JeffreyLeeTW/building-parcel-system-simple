@@ -120,6 +120,13 @@
   ['newBuilding', 'newFloor', 'newUnit'].forEach(function (id) {
     document.getElementById(id).addEventListener('change', updateNewResidentOptions);
   });
+
+  document.getElementById('addPackageForm').addEventListener('submit', function () {
+    var btn = this.querySelector('button[type="submit"]');
+    if (btn.disabled) return false;
+    btn.disabled = true;
+    btn.textContent = '登記中…';
+  });
 </script>
 <script th:src="@{/js/toast.js}"></script>
 </body>

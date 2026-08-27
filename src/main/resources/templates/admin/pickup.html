@@ -48,10 +48,6 @@
                        th:value="${submittedCode}" required>
                 <button class="primary" type="submit">搜尋</button>
               </div>
-              <div class="test-codes">
-                <button type="button" class="test-code" onclick="document.getElementById('pickupCode').value='4826'"><b>4826</b>本人領取測試</button>
-                <button type="button" class="test-code" onclick="document.getElementById('pickupCode').value='3504'"><b>3504</b>授權代領測試</button>
-              </div>
             </form>
             <div class="error-box" style="margin-top:16px" th:if="${error}">
               <h2 th:text="${error}"></h2>
