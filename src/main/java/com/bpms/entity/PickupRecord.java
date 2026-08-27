@@ -22,7 +22,9 @@ public class PickupRecord {
     // Diagram says type Image; the codebase stores the photo captured from
     // the admin's camera as raw bytes decoded from a base64 data URL, so
     // byte[] is kept rather than introducing an Image abstraction.
-    @Lob
+    // No @Lob: that maps to a PostgreSQL large object (oid), which can only
+    // be read inside a transaction and broke reads made outside one (e.g.
+    // ResidentController.dashboard()). Plain byte[] maps to bytea instead.
     @Column(name = "pickup_photo")
     private byte[] pickupPhoto;
 
