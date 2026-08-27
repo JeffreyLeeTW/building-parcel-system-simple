@@ -9,7 +9,8 @@ public class PickupRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "id")
+    private Long pickupRecordId;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "parcel_id", nullable = false)
@@ -18,6 +19,9 @@ public class PickupRecord {
     @Column(name = "pickup_time", nullable = false)
     private LocalDateTime pickupTime;
 
+    // Diagram says type Image; the codebase stores the photo captured from
+    // the admin's camera as raw bytes decoded from a base64 data URL, so
+    // byte[] is kept rather than introducing an Image abstraction.
     @Lob
     @Column(name = "pickup_photo")
     private byte[] pickupPhoto;
@@ -37,11 +41,20 @@ public class PickupRecord {
     private String signerNote;
 
     public String getDisplayId() {
-        return "REC-" + String.format("%06d", id);
+        return "REC-" + String.format("%06d", pickupRecordId);
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    /**
+     * Diagram method: uploadPickupPhoto(photo: Image): Void.
+     * Pure field mutation; byte[] kept in place of Image (see field comment
+     * above).
+     */
+    public void uploadPickupPhoto(byte[] photo) {
+        this.pickupPhoto = photo;
+    }
+
+    public Long getPickupRecordId() { return pickupRecordId; }
+    public void setPickupRecordId(Long pickupRecordId) { this.pickupRecordId = pickupRecordId; }
     public Parcel getParcel() { return parcel; }
     public void setParcel(Parcel parcel) { this.parcel = parcel; }
     public LocalDateTime getPickupTime() { return pickupTime; }
