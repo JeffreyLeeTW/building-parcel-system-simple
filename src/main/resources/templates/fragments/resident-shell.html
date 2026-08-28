@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <header th:fragment="topbar" class="topbar">
-  <div class="brand">大樓包裹管理平台｜住戶</div>
+  <div class="brand"><img th:src="@{/images/logo.png}" alt="Logo" class="brand-logo">大樓包裹管理平台｜住戶</div>
   <div class="top-right">
     <div class="user">
       <b th:text="${currentResident != null ? currentResident.residentName : ''}">住戶</b>

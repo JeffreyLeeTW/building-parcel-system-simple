@@ -69,9 +69,13 @@ public class AdminResidentController {
                           @RequestParam String email, @RequestParam(required = false) String personalId,
                           @RequestParam String password,
                           RedirectAttributes redirectAttributes) {
-        residentService.create(name.trim(), buildingCode, floor, unit, email.trim(),
-                trimToNull(personalId), password);
-        redirectAttributes.addFlashAttribute("toast", "住戶已新增");
+        try {
+            residentService.create(name.trim(), buildingCode, floor, unit, email.trim(),
+                    trimToNull(personalId), password);
+            redirectAttributes.addFlashAttribute("toast", "住戶已新增");
+        } catch (DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("toast", "此Email已被其他住戶使用");
+        }
         return "redirect:/admin/residents";
     }
 
@@ -81,9 +85,13 @@ public class AdminResidentController {
                           @RequestParam String email, @RequestParam(required = false) String personalId,
                           @RequestParam(required = false) String password,
                           RedirectAttributes redirectAttributes) {
-        residentService.update(id, name.trim(), buildingCode, floor, unit, email.trim(),
-                trimToNull(personalId), password);
-        redirectAttributes.addFlashAttribute("toast", "住戶資料已修改");
+        try {
+            residentService.update(id, name.trim(), buildingCode, floor, unit, email.trim(),
+                    trimToNull(personalId), password);
+            redirectAttributes.addFlashAttribute("toast", "住戶資料已修改");
+        } catch (DataIntegrityViolationException e) {
+            redirectAttributes.addFlashAttribute("toast", "此Email已被其他住戶使用");
+        }
         return "redirect:/admin/residents";
     }
 

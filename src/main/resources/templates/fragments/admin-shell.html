@@ -3,7 +3,7 @@
 <body>
 
 <header th:fragment="topbar" class="topbar">
-  <div class="brand">大樓包裹管理平台｜管理員</div>
+  <div class="brand"><img th:src="@{/images/logo.png}" alt="Logo" class="brand-logo">大樓包裹管理平台｜管理員</div>
   <div class="top-right">
     <div class="user">
       <b th:text="${currentConcierge != null ? currentConcierge.conciergeName : ''}">管理員</b>

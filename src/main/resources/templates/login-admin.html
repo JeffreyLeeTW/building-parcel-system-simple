@@ -9,6 +9,7 @@
 <body>
   <section class="admin-login">
     <form class="admin-login-box" method="post" th:action="@{/admin/login}">
+      <img th:src="@{/images/logo.png}" alt="Logo" class="page-logo">
       <h1 class="admin-login-title">管理員登入</h1>
       <p class="admin-login-note">大樓包裹管理平台</p>
       <div class="field"><label for="account">帳號</label><input id="account" name="account" autocomplete="username" required></div>
