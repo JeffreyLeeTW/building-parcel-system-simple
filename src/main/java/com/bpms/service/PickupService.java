@@ -5,6 +5,7 @@ import com.bpms.entity.Parcel.ParcelStatus;
 import com.bpms.entity.PickupRecord.PickupMethod;
 import com.bpms.repository.ParcelRepository;
 import com.bpms.repository.PickupRecordRepository;
+import com.bpms.repository.ResidentRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,32 +16,48 @@ import java.util.Optional;
 public class PickupService {
 
     private final ParcelRepository parcelRepository;
+    private final ResidentRepository residentRepository;
     private final PickupRecordRepository pickupRecordRepository;
     private final MailService mailService;
 
-    public PickupService(ParcelRepository parcelRepository, PickupRecordRepository pickupRecordRepository, MailService mailService) {
+    public PickupService(ParcelRepository parcelRepository, ResidentRepository residentRepository,
+                          PickupRecordRepository pickupRecordRepository, MailService mailService) {
         this.parcelRepository = parcelRepository;
+        this.residentRepository = residentRepository;
         this.pickupRecordRepository = pickupRecordRepository;
         this.mailService = mailService;
     }
 
     public sealed interface SearchResult permits Found, AlreadyPicked, NotFound {}
-    public record Found(Parcel parcel) implements SearchResult {}
+    public record Found(Parcel parcel, Resident resident) implements SearchResult {}
     public record AlreadyPicked(LocalDateTime pickupTime) implements SearchResult {}
     public record NotFound() implements SearchResult {}
 
+    /**
+     * Diagram sequence: verifyCode(code) then queryParcel(code) -> queryResident(name).
+     * queryParcel runs first here since verifyCode is an instance method and
+     * needs a Parcel to call it on; the same three diagram methods are used,
+     * just reordered to satisfy that constraint.
+     */
     public SearchResult search(String code) {
-        Optional<Parcel> available = parcelRepository.findFirstByParcelCodeAndParcelstatus(code, ParcelStatus.AVAILABLE);
-        if (available.isPresent()) {
-            return new Found(available.get());
+        Optional<Parcel> parcelOpt = parcelRepository.queryParcel(code);
+        if (parcelOpt.isEmpty()) {
+            return new NotFound();
         }
-        Optional<Parcel> recent = parcelRepository.findFirstByParcelCodeOrderByArrivalTimeDesc(code);
-        if (recent.isPresent() && recent.get().getParcelstatus() == ParcelStatus.PICKED_UP) {
-            LocalDateTime pickupTime = pickupRecordRepository.findFirstByParcelOrderByPickupTimeDesc(recent.get())
+        Parcel parcel = parcelOpt.get();
+
+        if (parcel.verifyCode(code)) {
+            Resident resident = residentRepository.queryResident(parcel.getResident().getResidentName()).orElseThrow();
+            return new Found(parcel, resident);
+        }
+
+        if (parcel.getParcelstatus() == ParcelStatus.PICKED_UP) {
+            LocalDateTime pickupTime = pickupRecordRepository.findFirstByParcelOrderByPickupTimeDesc(parcel)
                     .map(PickupRecord::getPickupTime)
-                    .orElse(recent.get().getArrivalTime());
+                    .orElse(parcel.getArrivalTime());
             return new AlreadyPicked(pickupTime);
         }
+
         return new NotFound();
     }
 
