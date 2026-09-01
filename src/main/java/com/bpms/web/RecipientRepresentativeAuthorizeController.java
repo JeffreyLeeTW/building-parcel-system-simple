@@ -1,7 +1,7 @@
 package com.bpms.web;
 
 import com.bpms.entity.Parcel;
-import com.bpms.entity.ParcelStatus;
+import com.bpms.entity.Parcel.ParcelStatus;
 import com.bpms.repository.ParcelRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

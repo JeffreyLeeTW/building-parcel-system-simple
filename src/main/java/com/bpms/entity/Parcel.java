@@ -7,6 +7,11 @@ import java.time.LocalDateTime;
 @Table(name = "parcel")
 public class Parcel {
 
+    public enum ParcelStatus {
+        AVAILABLE,
+        PICKED_UP
+    }
+
     // Not in the UML diagram (primary keys are usually omitted there), left
     // as-is - every other class/service in this codebase keys off it.
     @Id

@@ -1,6 +1,8 @@
 package com.bpms.service;
 
 import com.bpms.entity.*;
+import com.bpms.entity.Parcel.ParcelStatus;
+import com.bpms.entity.PickupRecord.PickupMethod;
 import com.bpms.repository.ParcelRepository;
 import com.bpms.repository.PickupRecordRepository;
 import org.springframework.stereotype.Service;

@@ -7,6 +7,11 @@ import java.time.LocalDateTime;
 @Table(name = "pickup_record")
 public class PickupRecord {
 
+    public enum PickupMethod {
+        SELF,
+        RECIPIENT_REPRESENTATIVE
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

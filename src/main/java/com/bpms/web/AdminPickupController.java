@@ -128,7 +128,7 @@ public class AdminPickupController {
         }
         Parcel parcel = parcelRepository.findById(parcelId).orElse(null);
         Concierge admin = conciergeRepository.findById(conciergeId).orElse(null);
-        if (parcel == null || admin == null || parcel.getParcelstatus() != com.bpms.entity.ParcelStatus.AVAILABLE) {
+        if (parcel == null || admin == null || parcel.getParcelstatus() != Parcel.ParcelStatus.AVAILABLE) {
             resetSession(session);
             return "redirect:/admin/pickup";
         }

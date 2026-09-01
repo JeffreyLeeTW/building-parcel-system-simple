@@ -1,7 +1,7 @@
 package com.bpms.repository;
 
 import com.bpms.entity.Parcel;
-import com.bpms.entity.ParcelStatus;
+import com.bpms.entity.Parcel.ParcelStatus;
 import com.bpms.entity.Resident;
 import org.springframework.data.jpa.repository.JpaRepository;
 

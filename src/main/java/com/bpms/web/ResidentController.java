@@ -2,7 +2,7 @@ package com.bpms.web;
 
 import com.bpms.config.SessionKeys;
 import com.bpms.entity.Parcel;
-import com.bpms.entity.ParcelStatus;
+import com.bpms.entity.Parcel.ParcelStatus;
 import com.bpms.entity.Resident;
 import com.bpms.repository.ParcelRepository;
 import com.bpms.repository.PickupRecordRepository;
