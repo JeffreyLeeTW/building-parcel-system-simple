@@ -32,7 +32,7 @@ public class ParcelService {
         parcel.setArrivalTime(LocalDateTime.now());
         parcel.setRecipientRepresentativeToken(UUID.randomUUID().toString().replace("-", ""));
         parcel = parcelRepository.save(parcel);
-        mailService.sendNotification(resident, parcel);
+        resident.sendNotification(mailService, parcel);
         return parcel;
     }
 

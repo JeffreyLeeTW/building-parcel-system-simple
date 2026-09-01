@@ -1,5 +1,6 @@
 package com.bpms.entity;
 
+import com.bpms.repository.PickupRecordRepository;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -58,6 +59,16 @@ public class PickupRecord {
      */
     public void uploadPickupPhoto(byte[] photo) {
         this.pickupPhoto = photo;
+    }
+
+    /**
+     * Diagram method: PickupRecord.execute(): PickupRecord (Ref: Create pickup record).
+     * Persists this record; the repository is passed in rather than held as
+     * a field, so this entity keeps no persistent dependency on Spring/JPA
+     * infrastructure - only this one call needs it.
+     */
+    public PickupRecord execute(PickupRecordRepository pickupRecordRepository) {
+        return pickupRecordRepository.save(this);
     }
 
     public Long getPickupRecordId() { return pickupRecordId; }

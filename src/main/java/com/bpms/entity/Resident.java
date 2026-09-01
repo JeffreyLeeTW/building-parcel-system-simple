@@ -1,5 +1,6 @@
 package com.bpms.entity;
 
+import com.bpms.service.MailService;
 import jakarta.persistence.*;
 
 @Entity
@@ -42,6 +43,26 @@ public class Resident {
      * UML class diagram names it explicitly; delegates to residentEmail.
      */
     public String getEmail() { return residentEmail; }
+
+    /**
+     * Diagram method: Resident.sendNotification(): Void.
+     * The mail service is passed in rather than held as a field, so this
+     * entity keeps no persistent dependency on Spring/JPA infrastructure -
+     * only this one call needs it. Overloaded with the pickup-confirmation
+     * variant below, matching MailService's two sendNotification() methods.
+     */
+    public void sendNotification(MailService mailService, Parcel parcel) {
+        mailService.sendNotification(this, parcel);
+    }
+
+    /**
+     * Diagram method: Resident.sendNotification(): Void.
+     * The pickup-completion notification; see the overload above for the
+     * arrival notification.
+     */
+    public void sendNotification(MailService mailService, Parcel parcel, PickupRecord record) {
+        mailService.sendNotification(this, parcel, record);
+    }
 
     public Long getResidentId() { return residentId; }
     public void setResidentId(Long residentId) { this.residentId = residentId; }

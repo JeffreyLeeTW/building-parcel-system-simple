@@ -44,7 +44,7 @@ public class PickupService {
         Parcel parcel = parcelOpt.get();
 
         if (parcel.verifyCode(code)) {
-            Resident resident = residentRepository.queryResident(parcel.getResident().getResidentName()).orElseThrow();
+            Resident resident = parcel.queryResident(residentRepository, parcel.getResident().getResidentName());
             return new Found(parcel, resident);
         }
 
@@ -80,12 +80,11 @@ public class PickupService {
         record.setActualPickerName(actualPickerName);
         record.setPickupMethod(method);
         record.setSignerNote(signerNote);
-        record = pickupRecordRepository.save(record);
 
-        parcel.updateStatus(ParcelStatus.PICKED_UP);
+        record = parcel.updateStatus(ParcelStatus.PICKED_UP, record, pickupRecordRepository);
         parcelRepository.save(parcel);
 
-        mailService.sendPickupConfirmation(parcel.getResident(), parcel, record);
+        parcel.getResident().sendNotification(mailService, parcel, record);
         return record;
     }
 

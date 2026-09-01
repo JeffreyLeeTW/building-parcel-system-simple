@@ -31,13 +31,12 @@ public class MailService {
     }
 
     /**
-     * Diagram method: Parcel.sendNotification(): Void.
+     * Diagram method: Resident.sendNotification(): Void.
      * Sends the arrival notification for a newly-registered parcel. Kept on
-     * MailService (not the Parcel entity) since it needs JavaMailSender;
-     * renamed from sendArrivalNotification to match the diagram.
-     * sendPickupConfirmation below is a distinct notification (the pickup
-     * receipt) that the diagram does not separately name, so it keeps its
-     * own descriptive name.
+     * MailService (not the Resident entity) since it needs JavaMailSender;
+     * Resident.sendNotification() delegates here. Overloaded with the
+     * pickup-confirmation variant below, which the diagram names the same
+     * way; the extra PickupRecord parameter disambiguates the two.
      */
     public void sendNotification(Resident resident, Parcel parcel) {
         String recipientRepresentativeLink = baseUrl + "/recipient-representative-authorize?token=" + parcel.getRecipientRepresentativeToken();
@@ -47,7 +46,12 @@ public class MailService {
         send(resident.getResidentEmail(), "【大樓包裹管理平台】包裹到貨通知", body);
     }
 
-    public void sendPickupConfirmation(Resident resident, Parcel parcel, PickupRecord record) {
+    /**
+     * Diagram method: Resident.sendNotification(): Void.
+     * The pickup-completion notification; see the overload above for the
+     * arrival notification the diagram names the same way.
+     */
+    public void sendNotification(Resident resident, Parcel parcel, PickupRecord record) {
         String body = "%s 您好，\n\n您的包裹已完成領取簽收，資訊如下：\n\n包裹編號：%s\n領取方式：%s\n實際領取人：%s\n領取時間：%s\n經辦管理員：%s\n\n若非您本人或授權代領人領取，請盡速聯繫大樓管理室。\n\n（此為系統自動發送信件，請勿直接回覆）"
                 .formatted(resident.getResidentName(), parcel.getDisplayCode(),
                         parcel.isProxy() ? "授權代領" : "本人領取",

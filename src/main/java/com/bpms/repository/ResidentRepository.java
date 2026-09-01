@@ -14,9 +14,7 @@ public interface ResidentRepository extends JpaRepository<Resident, Long> {
 
     /**
      * Diagram method: Parcel.queryResident(name): Resident.
-     * Placed here since it inherently needs a repository lookup; a thin
-     * wrapper under the diagram's name delegating to the derived query
-     * above.
+     * The actual repository lookup; Parcel.queryResident() delegates here.
      */
     default Optional<Resident> queryResident(String name) {
         return findFirstByResidentName(name);

@@ -1,5 +1,7 @@
 package com.bpms.entity;
 
+import com.bpms.repository.PickupRecordRepository;
+import com.bpms.repository.ResidentRepository;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -79,9 +81,14 @@ public class Parcel {
      * The diagram implies a String parameter, but the backing field is the
      * ParcelStatus enum - kept as ParcelStatus here for correctness rather
      * than downgrading to String.
+     * Also drives the diagram's Parcel -> PickupRecord: execute() call
+     * (Ref: Create pickup record) - record and repository are passed in
+     * rather than held as fields, so this entity keeps no persistent
+     * dependency on Spring/JPA infrastructure beyond this one call.
      */
-    public void updateStatus(ParcelStatus newStatus) {
+    public PickupRecord updateStatus(ParcelStatus newStatus, PickupRecord record, PickupRecordRepository pickupRecordRepository) {
         this.parcelstatus = newStatus;
+        return record.execute(pickupRecordRepository);
     }
 
     /**
@@ -94,6 +101,16 @@ public class Parcel {
      */
     public boolean verifyCode(String code) {
         return parcelCode != null && parcelCode.equals(code) && parcelstatus == ParcelStatus.AVAILABLE;
+    }
+
+    /**
+     * Diagram method: Parcel.queryResident(name: String): Resident.
+     * The repository is passed in rather than held as a field, so this
+     * entity keeps no persistent dependency on Spring/JPA infrastructure -
+     * only this one call needs it.
+     */
+    public Resident queryResident(ResidentRepository residentRepository, String name) {
+        return residentRepository.queryResident(name).orElseThrow();
     }
 
     public Long getId() { return id; }
