@@ -77,8 +77,6 @@ public class PickupRecord {
     public void setParcel(Parcel parcel) { this.parcel = parcel; }
     public LocalDateTime getPickupTime() { return pickupTime; }
     public void setPickupTime(LocalDateTime pickupTime) { this.pickupTime = pickupTime; }
-    public byte[] getPickupPhoto() { return pickupPhoto; }
-    public void setPickupPhoto(byte[] pickupPhoto) { this.pickupPhoto = pickupPhoto; }
     public Concierge getHandlingConcierge() { return handlingConcierge; }
     public void setHandlingConcierge(Concierge handlingConcierge) { this.handlingConcierge = handlingConcierge; }
     public String getActualPickerName() { return actualPickerName; }

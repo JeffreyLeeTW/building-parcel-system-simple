@@ -10,8 +10,6 @@ import java.util.Optional;
 
 public interface ParcelRepository extends JpaRepository<Parcel, Long> {
 
-    Optional<Parcel> findFirstByParcelCodeAndParcelstatus(String parcelCode, ParcelStatus parcelstatus);
-
     Optional<Parcel> findFirstByParcelCodeOrderByArrivalTimeDesc(String parcelCode);
 
     boolean existsByParcelCodeAndParcelstatus(String parcelCode, ParcelStatus parcelstatus);

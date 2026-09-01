@@ -46,6 +46,4 @@ public class Concierge {
     public void setConciergeName(String conciergeName) { this.conciergeName = conciergeName; }
     public String getConciergeAccount() { return conciergeAccount; }
     public void setConciergeAccount(String conciergeAccount) { this.conciergeAccount = conciergeAccount; }
-    public String getConciergePassword() { return conciergePassword; }
-    public void setConciergePassword(String conciergePassword) { this.conciergePassword = conciergePassword; }
 }
