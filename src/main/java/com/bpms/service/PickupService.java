@@ -34,10 +34,7 @@ public class PickupService {
     public record NotFound() implements SearchResult {}
 
     /**
-     * Diagram sequence: verifyCode(code) then queryParcel(code) -> queryResident(name).
-     * queryParcel runs first here since verifyCode is an instance method and
-     * needs a Parcel to call it on; the same three diagram methods are used,
-     * just reordered to satisfy that constraint.
+     * Diagram sequence: queryParcel(code) -> verifyCode(code) -> queryResident(name).
      */
     public SearchResult search(String code) {
         Optional<Parcel> parcelOpt = parcelRepository.queryParcel(code);
